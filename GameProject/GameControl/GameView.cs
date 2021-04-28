@@ -1,35 +1,34 @@
 ﻿using System.Drawing;
 using System.Windows.Forms;
-using GameProject.MainMenu;
+using unvell.D2DLib;
 
 namespace GameProject.GameControl
 {
-	class GameView : View
+	internal class GameView : View
 	{
-		private Graphics _graphics;
-
-		public GameController Controller { get; protected init; }
+		public GameController Controller { get; }
+		public GameMap Map { get; set; }
 
 		public GameView(Controller controller)
 		{
-			DoubleBuffered = true;
 			Controller = controller as GameController;
-			_graphics = CreateGraphics();
 		}
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
-			Controller.Model.KeyDown(e.KeyCode);
+			Controller.KeyDown(e.KeyCode);
 		}
 
 		protected override void OnKeyUp(KeyEventArgs e)
 		{
-			Controller.Model.KeyUp(e.KeyCode);
+			Controller.KeyUp(e.KeyCode);
 		}
 
-		public void Redraw(GameMap map)
+		protected override void OnRender(D2DGraphics g)
 		{
-			_graphics.DrawRectangle(new Pen(Color.Black), (Rectangle) map.Player);
+			Controller.RequestUpdate();
+			g.DrawRectangle((RectangleF) Map.Player, D2DColor.Black);
+			Invalidate();
 		}
 	}
 }

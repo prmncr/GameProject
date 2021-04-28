@@ -1,20 +1,34 @@
-﻿using System;
+﻿using System.Windows.Forms;
 
 namespace GameProject.GameControl
 {
-	class GameController : Controller
+	internal class GameController : Controller
 	{
-		public GameModel Model { get; private init; }
-		public GameView View { get; private init; }
+		public GameModel Model { get; }
+		public GameView View { get; }
 
 		public GameController()
 		{
-			var view = new GameView(this);
+			Model = new GameModel();
+			var view = new GameView(this) {Map = Model.Map};
+
 			View = view;
 			ViewAbstract = view;
-			Model = new GameModel();
+		}
 
-			Model.Redraw += map => View.Redraw(map);
+		public void KeyDown(Keys eKeyCode)
+		{
+			Model.KeyDown(eKeyCode);
+		}
+
+		public void KeyUp(Keys eKeyCode)
+		{
+			Model.KeyUp(eKeyCode);
+		}
+
+		public void RequestUpdate()
+		{
+			Model.Update();
 		}
 	}
 }

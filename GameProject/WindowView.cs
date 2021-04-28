@@ -5,7 +5,7 @@ using System.Reflection;
 
 namespace GameProject
 {
-	public partial class WindowView : Form
+	public partial class WindowView : D2DForm
 	{
 		public WindowView()
 		{
