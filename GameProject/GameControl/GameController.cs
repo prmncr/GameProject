@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GameProject.Levels;
 
 namespace GameProject.GameControl
 {
@@ -7,9 +8,9 @@ namespace GameProject.GameControl
 		public GameModel Model { get; }
 		public GameView View { get; }
 
-		public GameController()
+		public GameController(ILevel level)
 		{
-			Model = new GameModel();
+			Model = new GameModel(level);
 			var view = new GameView(this) {Map = Model.Map};
 
 			View = view;

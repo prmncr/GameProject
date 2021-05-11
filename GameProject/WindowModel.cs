@@ -1,4 +1,5 @@
 ﻿using System;
+using GameProject.Levels;
 using unvell.D2DLib.WinForm;
 
 namespace GameProject
@@ -15,9 +16,9 @@ namespace GameProject
 			_view = view;
 		}
 
-		public void ChangePage(Page controller)
+		public void ChangePage(Page controller, ILevel level = null)
 		{
-			PageChanged?.Invoke(controller.GetInstance());
+			PageChanged?.Invoke(controller.GetInstance(level));
 		}
 	}
 }

@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GameProject.GameControl;
+using GameProject.Levels;
 
-namespace GameProject.MainMenu
+namespace GameProject.LevelSelector
 {
-	public class MainMenuView : View
+	public class SelectorView : View
 	{
-		public MainMenuView()
+		public SelectorView()
 		{
 			RenderMenu();
 		}
@@ -20,10 +20,10 @@ namespace GameProject.MainMenu
 			Button btn = new()
 			{
 				Location = new Point((Width - 100) / 2, (Height - 50) / 2),
-				Size = new Size(100, 50), 
-				Text = "Play"
+				Size = new Size(100, 50),
+				Text = "Level 1"
 			};
-			btn.Click += (_, _) => WindowController.Model.ChangePage(Page.Selector);
+			btn.Click += (_, _) => WindowController.Model.ChangePage(Page.Game, new Level1());
 			Controls.Add(btn);
 		}
 	}

@@ -2,6 +2,7 @@
 using GameProject.MainMenu;
 using unvell.D2DLib.WinForm;
 using System.Reflection;
+using GameProject.Levels;
 
 namespace GameProject
 {
@@ -20,6 +21,7 @@ namespace GameProject
 			if (view == null) return;
 			view.Dock = DockStyle.Fill;
 			Controls.Add(view);
+			view.Focus();
 		}
 	}
 }

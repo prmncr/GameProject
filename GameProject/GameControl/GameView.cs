@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 using unvell.D2DLib;
 
@@ -27,7 +28,7 @@ namespace GameProject.GameControl
 		protected override void OnRender(D2DGraphics g)
 		{
 			Controller.RequestUpdate();
-			g.DrawRectangle((RectangleF) Map.Player, D2DColor.Black);
+			Map.Draw(g, Width, Height);
 			Invalidate();
 		}
 	}
