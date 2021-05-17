@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GameProject.GameObjects;
 using GameProject.Levels;
 
@@ -9,15 +8,12 @@ namespace GameProject.GameControl
 	{
 		private bool _left, _right, _up, _down;
 		private readonly Player _player;
-		private float _scaling;
-		public GameMap Map { get; set; }
+		public GameMap Map { get; }
 
 		public GameModel(ILevel level)
 		{
-			_scaling = 50;
-			Map = new GameMap(_scaling, level, out var player);
+			Map = new GameMap(level, out var player);
 			_player = player;
-			Map.Player = _player; //todo: get lvl name by files in directory
 		}
 
 		public void KeyDown(Keys eKeyCode)
@@ -61,6 +57,7 @@ namespace GameProject.GameControl
 		public void Update()
 		{
 			_player.Move(_left, _right, _up, _down);
+			Map.MoveEnemies();
 		}
 	}
 }

@@ -70,6 +70,12 @@ namespace GameProject.GameObjects
 		public void Draw(D2DGraphics g, float width, float height, Vector2 offset = default, Vector2 playerSize = default)
 		{
 			g.FillRectangle(MathF.Ceiling((width - Size.X) / 2), MathF.Ceiling((height - Size.Y) / 2), Size.X, Size.Y, D2DColor.LightGreen);
+			#if DEBUG
+			g.DrawText($"MODEL: x: {Position.X}, y: {Position.Y}, scale: {_scaling}", D2DColor.Black, "Consolas", 14, 0, 0);
+			g.DrawText(
+				$" VIEW: x: {MathF.Ceiling((width - Size.X) / 2)}, y: {MathF.Ceiling((height - Size.Y) / 2)}, scale: {_scaling}",
+				D2DColor.Black, "Consolas", 14, 0, 15);
+			#endif
 		}
 
 		public static explicit operator RectangleF(Player player) =>

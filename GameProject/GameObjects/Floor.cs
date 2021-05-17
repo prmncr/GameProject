@@ -17,9 +17,12 @@ namespace GameProject.GameObjects
 		
 		public void Draw(D2DGraphics g, Vector2 offset, float width, float height, Vector2 playerSize)
 		{
-			g.FillRectangle(MathF.Ceiling(width / 2) + Position.X - MathF.Ceiling(playerSize.X / 2) - offset.X,
-				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(playerSize.Y / 2) - offset.Y, Scaling,
-				Scaling, D2DColor.Gray);
+			g.FillRectangle(
+				MathF.Ceiling(width / 2) + Position.X - MathF.Ceiling(playerSize.X / 2) - MathF.Ceiling(offset.X),
+				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(playerSize.Y / 2) - MathF.Ceiling(offset.Y), 
+				Scaling,
+				Scaling, 
+				D2DColor.Gray);
 		}
 	}
 }

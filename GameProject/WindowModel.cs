@@ -7,7 +7,6 @@ namespace GameProject
 	public class WindowModel
 	{
 		private WindowView _view;
-		private Controller _currentPageControl;
 
 		public event Action<Controller> PageChanged;
 
