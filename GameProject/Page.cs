@@ -1,8 +1,5 @@
-﻿using System.Collections.Generic;
-using GameProject.GameControl;
-using GameProject.Levels;
-using GameProject.LevelSelector;
-using GameProject.MainMenu;
+﻿using GameProject.Levels;
+using unvell.D2DLib.WinForm;
 
 namespace GameProject
 {
@@ -13,13 +10,13 @@ namespace GameProject
 
 	internal static class PagesExtensions
 	{
-		public static Controller GetInstance(this Page page, ILevel level)
+		public static D2DControl GetInstance(this Page page, ILevel level)
 		{
 			return page switch
 			{
-				Page.MainMenu => new MainMenuController(),
-				Page.Game => new GameController(level),
-				Page.Selector => new SelectorController(),
+				Page.MainMenu => new MainMenu(),
+				Page.Game => new Game(level),
+				Page.Selector => new LevelSelector(),
 				_ => null,
 			};
 		}

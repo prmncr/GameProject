@@ -1,84 +1,91 @@
 ﻿using System;
-using System.Drawing;
 using System.Numerics;
-using GameProject.GameControl;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
-	public class Player : IEntity
+	public class Player
 	{
-		public float Speed { get; set; } = 5;
-		public Vector2 Position { get; set; }
-		public Vector2 Size { get; set; }
-
-		private GameMap _map;
-		private float Top => Position.Y;
-		private float Bottom => Position.Y + Size.Y;
-		private float Left => Position.X;
-		private float Right => Position.X + Size.X;
-		private float _scaling;
-
-		public Player(float scaling, Vector2 size, Vector2 startPos, GameMap map)
+		public Vector2 Position => _position;
+		public Vector2 Size => _size;
+		
+		private float Top => _position.Y;
+		private float Bottom => _position.Y + _size.Y;
+		private float Left => _position.X;
+		private float Right => _position.X + _size.X;
+		
+		private Vector2 _position;
+		private readonly float _scaling;
+		private readonly float _speed;
+		private readonly Vector2 _size;
+		private readonly Game _map;
+		
+		public Player(float scaling, Vector2 size, Vector2 startPos, Game map)
 		{
-			Size = size;
+			_size = size;
 			_scaling = scaling;
-			Position = startPos;
+			_position = startPos;
 			_map = map;
+			_speed = map.Level.PlayerSpeed;
+		}
+		
+		public Player(float scaling, Vector2 size, Vector2 startPos, float speed)
+		{
+			_size = size;
+			_scaling = scaling;
+			_position = startPos;
+			_speed = speed;
 		}
 
 		public void Move(bool left, bool right, bool up, bool down)
 		{
 			if (down)
 			{
-				var predictedY = (int) MathF.Floor((Bottom + Speed) / _scaling);
+				var predictedY = (int) MathF.Floor((Bottom + _speed) / _scaling);
 				if (_map.GetCell((int) MathF.Floor(Left / _scaling), predictedY) is Wall ||
 				    _map.GetCell((int) MathF.Floor((Right - 1) / _scaling), predictedY) is Wall)
-					Position += new Vector2(0, predictedY * _scaling - Bottom);
+					_position += new Vector2(0, predictedY * _scaling - Bottom);
 				else
-					Position += new Vector2(0, Speed / (left || right ? MathF.Sqrt(2) : 1));
+					_position += new Vector2(0, _speed / (left || right ? MathF.Sqrt(2) : 1));
 			}
 			if (up)
 			{
-				var predictedY = (int) MathF.Floor((Top - Speed) / _scaling);
+				var predictedY = (int) MathF.Floor((Top - _speed) / _scaling);
 				if (_map.GetCell((int) MathF.Floor(Left / _scaling), predictedY) is Wall ||
 				    _map.GetCell((int) MathF.Floor((Right - 1) / _scaling), predictedY) is Wall)
-					Position += new Vector2(0, (predictedY + 1) * _scaling - Top);
+					_position += new Vector2(0, (predictedY + 1) * _scaling - Top);
 				else
-					Position += new Vector2(0, -Speed / (left || right ? MathF.Sqrt(2) : 1));
+					_position += new Vector2(0, -_speed / (left || right ? MathF.Sqrt(2) : 1));
 			}
 			if (left)
 			{
-				var predictedX = (int) MathF.Floor((Left - Speed) / _scaling);
+				var predictedX = (int) MathF.Floor((Left - _speed) / _scaling);
 				if (_map.GetCell(predictedX, (int) MathF.Floor(Top / _scaling)) is Wall ||
 				    _map.GetCell(predictedX, (int) MathF.Floor((Bottom - 1) / _scaling)) is Wall)
-					Position += new Vector2((predictedX + 1) * _scaling - Left, 0);
+					_position += new Vector2((predictedX + 1) * _scaling - Left, 0);
 				else
-					Position += new Vector2(-Speed / (up || down ? MathF.Sqrt(2) : 1), 0);
+					_position += new Vector2(-_speed / (up || down ? MathF.Sqrt(2) : 1), 0);
 			}
 			if (right)
 			{
-				var predictedX = (int) MathF.Floor((Right + Speed) / _scaling);
+				var predictedX = (int) MathF.Floor((Right + _speed) / _scaling);
 				if (_map.GetCell(predictedX, (int) MathF.Floor(Top / _scaling)) is Wall ||
 				    _map.GetCell(predictedX, (int) MathF.Floor((Bottom - 1) / _scaling)) is Wall)
-					Position += new Vector2(predictedX * _scaling - Right, 0);
+					_position += new Vector2(predictedX * _scaling - Right, 0);
 				else
-					Position += new Vector2(Speed / (up || down ? MathF.Sqrt(2) : 1), 0);
+					_position += new Vector2(_speed / (up || down ? MathF.Sqrt(2) : 1), 0);
 			}
 		}
 		
 		public void Draw(D2DGraphics g, float width, float height, Vector2 offset = default, Vector2 playerSize = default)
 		{
-			g.FillRectangle(MathF.Ceiling((width - Size.X) / 2), MathF.Ceiling((height - Size.Y) / 2), Size.X, Size.Y, D2DColor.LightGreen);
+			g.FillRectangle(MathF.Ceiling((width - _size.X) / 2), MathF.Ceiling((height - _size.Y) / 2), _size.X, _size.Y, D2DColor.LightGreen);
 			#if DEBUG
-			g.DrawText($"MODEL: x: {Position.X}, y: {Position.Y}, scale: {_scaling}", D2DColor.Black, "Consolas", 14, 0, 0);
+			g.DrawText($"MODEL: x: {_position.X}, y: {_position.Y}, scale: {_scaling}", D2DColor.Black, "Consolas", 14, 0, 0);
 			g.DrawText(
-				$" VIEW: x: {MathF.Ceiling((width - Size.X) / 2)}, y: {MathF.Ceiling((height - Size.Y) / 2)}, scale: {_scaling}",
+				$" VIEW: x: {MathF.Ceiling((width - _size.X) / 2)}, y: {MathF.Ceiling((height - _size.Y) / 2)}, scale: {_scaling}",
 				D2DColor.Black, "Consolas", 14, 0, 15);
 			#endif
 		}
-
-		public static explicit operator RectangleF(Player player) =>
-			new(player.Position.X, player.Position.Y, player.Size.X, player.Size.Y);
 	}
 }

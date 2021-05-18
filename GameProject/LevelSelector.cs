@@ -3,12 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using GameProject.Levels;
+using unvell.D2DLib.WinForm;
 
-namespace GameProject.LevelSelector
+namespace GameProject
 {
-	public class SelectorView : View
+	public class LevelSelector : D2DControl
 	{
-		public SelectorView()
+		public LevelSelector()
 		{
 			RenderMenu();
 		}
@@ -23,7 +24,7 @@ namespace GameProject.LevelSelector
 				Size = new Size(100, 50),
 				Text = "Level 1"
 			};
-			btn.Click += (_, _) => WindowController.Model.ChangePage(Page.Game, new Level1());
+			btn.Click += (_, _) => MainWindow.GetInstance().ChangePage(Page.Game, new Level1());
 			Controls.Add(btn);
 		}
 	}

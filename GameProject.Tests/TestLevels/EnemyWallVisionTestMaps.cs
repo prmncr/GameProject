@@ -16,7 +16,10 @@ namespace GameProject.Tests.TestLevels
 
 		public float BlockScaling => 10;
 		public Vector2 PlayerSize => new(10, 10);
+		public float PlayerSpeed => 5;
 		public Vector2 EnemySize  => new(10, 10);
+		public float EnemySpeed => 4;
+		public float EnemyVisionDistance => 1000;
 	}
 	
 	public class TestLevel2 : ILevel
@@ -32,6 +35,9 @@ namespace GameProject.Tests.TestLevels
 
 		public float BlockScaling => 10;
 		public Vector2 PlayerSize => new(10, 10);
+		public float PlayerSpeed => 5;
 		public Vector2 EnemySize  => new(10, 10);
+		public float EnemySpeed => 5;
+		public float EnemyVisionDistance => 1000;
 	}
 }

@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GameProject.GameControl;
+using unvell.D2DLib.WinForm;
 
-namespace GameProject.MainMenu
+namespace GameProject
 {
-	public class MainMenuView : View
+	public class MainMenu : D2DControl
 	{
-		public MainMenuView()
+		public MainMenu()
 		{
 			RenderMenu();
 		}
@@ -23,7 +23,7 @@ namespace GameProject.MainMenu
 				Size = new Size(100, 50), 
 				Text = "Play"
 			};
-			btn.Click += (_, _) => WindowController.Model.ChangePage(Page.Selector);
+			btn.Click += (_, _) => MainWindow.GetInstance().ChangePage(Page.Selector);
 			Controls.Add(btn);
 		}
 	}

@@ -1,7 +1,7 @@
 ﻿
 namespace GameProject
 {
-	partial class WindowView
+	partial class MainWindow
 	{
 		/// <summary>
 		///  Required designer variable.

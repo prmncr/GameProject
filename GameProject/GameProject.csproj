@@ -25,4 +25,13 @@
     <None Remove="Levels\level1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="MainMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="Game.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using GameProject.GameObjects;
 
 namespace GameProject.Levels
 {
@@ -31,6 +32,9 @@ namespace GameProject.Levels
 
 		public float BlockScaling => 50;
 		public Vector2 PlayerSize => new(40, 40);
+		public float PlayerSpeed => 5;
 		public Vector2 EnemySize => new(40, 40);
+		public float EnemySpeed => 4;
+		public float EnemyVisionDistance => 250;
 	}
 }
