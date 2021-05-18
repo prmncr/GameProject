@@ -1,90 +1,78 @@
 ﻿using System;
 using System.Drawing;
 using System.Numerics;
+using GameProject.Levels;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
-	public class Enemy
+	public abstract class Enemy : IEntity
 	{
 		public Vector2 Position => _position;
 		public Player Player { get; set; }
-		
+
 		private float Top => _position.Y;
-		private float Bottom => _position.Y + _size.Y;
+		private float Bottom => _position.Y + Size.Y;
 		private float Left => _position.X;
-		private float Right => _position.X + _size.X;
-		
+		private float Right => _position.X + Size.X;
+
 		public bool PlayerInVision;
-		private Vector2 _position;
-		private Vector2? _lastPath;
-		private readonly Vector2 _size;
+		protected readonly ILevel Level;
+		protected Vector2 _position;
+		protected Vector2? LastPath;
+		protected readonly float VisionDistance;
+		protected readonly Vector2 Size;
+		protected readonly Game _map;
 		private readonly float _scaling;
-		private readonly float _visionDistance;
 		private readonly float _speed;
-		private readonly Game _map;
 		
-		public Enemy(float scaling, Vector2 size, Vector2 startPos, Game map, Player player)
+		protected Enemy(Vector2 startPos, Game map)
 		{
-			_size = size;
-			_scaling = scaling;
-			_position = startPos;
 			_map = map;
-			Player = player;
-			_visionDistance = map.Level.EnemyVisionDistance;
-			_speed = map.Level.EnemySpeed;
+			Level = map.Level;
+			Size = Level.EnemySize;
+			_scaling = Level.BlockScaling;
+			_position = startPos;
+			VisionDistance = Level.EnemyVisionDistance;
+			_speed = Level.EnemySpeed;
 		}
+
+		public abstract void Draw(D2DGraphics g, float width, float height);
 		
-		public void Draw(D2DGraphics g, float width, float height, Vector2 offset = default, Vector2 playerSize = default)
-		{
-			var gEnemyPosX = MathF.Ceiling(width / 2) + _position.X - MathF.Ceiling(playerSize.X / 2) - offset.X;
-			var gEnemyPosY = MathF.Ceiling(height / 2) + _position.Y - MathF.Ceiling(playerSize.Y / 2) - offset.Y;
-			g.FillRectangle(gEnemyPosX, gEnemyPosY, _size.X, _size.Y, PlayerInVision ? D2DColor.Gold : D2DColor.Black);
-#if DEBUG
-			var gEnemyCenterX = gEnemyPosX + _size.X / 2;
-			var gEnemyCenterY = gEnemyPosY + _size.Y / 2;
-			g.DrawLine(gEnemyCenterX, gEnemyCenterY, (width - _size.X) / 2 + playerSize.X / 2,
-				(height - _size.Y) / 2 + playerSize.Y / 2, PlayerInVision ? D2DColor.Gold : D2DColor.Black);
-			if (_lastPath.HasValue)
-				g.DrawLine(gEnemyCenterX, gEnemyCenterY, gEnemyCenterX + _lastPath.Value.X, gEnemyCenterY + _lastPath.Value.Y, D2DColor.Blue);
-			g.FillEllipse(
-				new D2DEllipse(new D2DPoint(gEnemyCenterX, gEnemyCenterY), new D2DSize(_visionDistance, _visionDistance)),
-				D2DColor.FromGDIColor(Color.FromArgb(20, 0, 255, 0)));
-#endif
-		}
+		public abstract void Update();
 
 		public (bool, Vector2) CheckPath()
 		{
 			if (Player == null) return (false, default);
-			var path = Player.Position + Player.Size / 2 - (_position + _size / 2);
+			var path = Player.Position + Player.Size / 2 - (_position + Size / 2);
 			var dx = path.X / path.Length();
 			var dy = path.Y / path.Length();
 			for (var i = 0; i < path.Length(); i++)
-				if (_map.GetCell(_position + _size / 2 + new Vector2(dx * i, dy * i)) is Wall)
+				if (_map.GetCell(_position + Size / 2 + new Vector2(dx * i, dy * i)) is Wall)
 					return (false, default);
 			return (true, path);
 		}
 		
-		public void MakeMove()
+		public virtual void MakeMove()
 		{
 			var (pathExist, path) = CheckPath();
 			PlayerInVision = pathExist;
-			if (pathExist && (Player.Position - _position).Length() <= _visionDistance)
+			if (pathExist && (Player.Position - _position).Length() <= VisionDistance)
 			{
-				_lastPath = path;
+				LastPath = path;
 				var moveTo = Move(path.X > 0, path.Y > 0);
 				_position += moveTo;
-				_lastPath -= moveTo;
+				LastPath -= moveTo;
 			}
-			else if (_lastPath.HasValue)
+			else if (LastPath.HasValue)
 			{
-				var moveTo = Move(_lastPath.Value.X > 0, _lastPath.Value.Y > 0);
+				var moveTo = Move(LastPath.Value.X > 0, LastPath.Value.Y > 0);
 				_position += moveTo;
-				_lastPath -= moveTo;
+				LastPath -= moveTo;
 			}
 		}
 
-		private Vector2 Move(bool right, bool down)
+		protected Vector2 Move(bool right, bool down)
 		{
 			var dPos = Vector2.Zero;
 			if (down)
@@ -125,5 +113,7 @@ namespace GameProject.GameObjects
 			}
 			return dPos;
 		}
+
+		public virtual void DamagePlayer() { }
 	}
 }

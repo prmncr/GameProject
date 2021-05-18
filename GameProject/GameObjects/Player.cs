@@ -4,8 +4,9 @@ using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
-	public class Player
+	public class Player : IEntity
 	{
+		public float Health => _health;
 		public Vector2 Position => _position;
 		public Vector2 Size => _size;
 		
@@ -13,28 +14,24 @@ namespace GameProject.GameObjects
 		private float Bottom => _position.Y + _size.Y;
 		private float Left => _position.X;
 		private float Right => _position.X + _size.X;
-		
+
+		private bool _isResistance;
+		private int _resist;
+		private float _health = 100;
 		private Vector2 _position;
 		private readonly float _scaling;
 		private readonly float _speed;
 		private readonly Vector2 _size;
 		private readonly Game _map;
 		
-		public Player(float scaling, Vector2 size, Vector2 startPos, Game map)
+		public Player(Vector2 startPos, Game map)
 		{
-			_size = size;
-			_scaling = scaling;
-			_position = startPos;
 			_map = map;
-			_speed = map.Level.PlayerSpeed;
-		}
-		
-		public Player(float scaling, Vector2 size, Vector2 startPos, float speed)
-		{
-			_size = size;
-			_scaling = scaling;
+			_size = map.Level.PlayerSize;
+			_scaling = map.Level.BlockScaling;
 			_position = startPos;
-			_speed = speed;
+			
+			_speed = map.Level.PlayerSpeed;
 		}
 
 		public void Move(bool left, bool right, bool up, bool down)
@@ -77,15 +74,31 @@ namespace GameProject.GameObjects
 			}
 		}
 		
-		public void Draw(D2DGraphics g, float width, float height, Vector2 offset = default, Vector2 playerSize = default)
+		public void Draw(D2DGraphics g, float width, float height)
 		{
-			g.FillRectangle(MathF.Ceiling((width - _size.X) / 2), MathF.Ceiling((height - _size.Y) / 2), _size.X, _size.Y, D2DColor.LightGreen);
-			#if DEBUG
-			g.DrawText($"MODEL: x: {_position.X}, y: {_position.Y}, scale: {_scaling}", D2DColor.Black, "Consolas", 14, 0, 0);
-			g.DrawText(
-				$" VIEW: x: {MathF.Ceiling((width - _size.X) / 2)}, y: {MathF.Ceiling((height - _size.Y) / 2)}, scale: {_scaling}",
-				D2DColor.Black, "Consolas", 14, 0, 15);
-			#endif
+			g.FillRectangle(
+				MathF.Ceiling((width - _size.X) / 2), 
+				MathF.Ceiling((height - _size.Y) / 2),
+				_size.X, 
+				_size.Y,
+				_isResistance ? D2DColor.DarkGreen : D2DColor.LightGreen);
+		}
+
+		public void TakeDamage(float damage, int resist)
+		{
+			if (_resist != 0) return;
+			_health -= damage;
+			_resist = resist;
+		}
+
+		public void Update()
+		{
+			if (_resist > 0)
+			{
+				_resist--;
+				_isResistance = true;
+			}
+			else _isResistance = false;
 		}
 	}
 }

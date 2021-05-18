@@ -22,7 +22,7 @@ namespace GameProject.GameObjects
 				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(playerSize.Y / 2) - MathF.Ceiling(offset.Y),
 				Scaling,
 				Scaling, 
-				D2DColor.Red);
+				D2DColor.DarkRed);
 		}
 	}
 }

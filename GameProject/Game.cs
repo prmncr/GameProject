@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Windows.Forms;
@@ -12,12 +13,13 @@ namespace GameProject
 {
 	public class Game : D2DControl
 	{
+		public ILevel Level { get; }
 		private readonly IStaticGameObject[][] _levelMap;
 		private readonly List<Enemy> _enemies = new();
+		private readonly List<IEntity> _customEntities = new();
 		private readonly int _levelWidth, _levelHeight;
 		private readonly float _scaling;
 		private bool _left, _right, _up, _down;
-		public readonly ILevel Level;
 		private readonly Player _player;
 
 		public Game(ILevel level)
@@ -35,20 +37,24 @@ namespace GameProject
 			for (var x = 0; x < _levelWidth; x++)
 				switch (levelMap[y][x])
 				{
-					case 0:
+					case 'f':
 						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
 						break;
-					case 1:
+					case 'w':
 						_levelMap[y][x] = new Wall(new Vector2(x, y), _scaling);
 						break;
-					case 2:
+					case 'p':
 						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
-						player = new Player(_scaling, level.PlayerSize, new Vector2(x * _scaling, y * _scaling), this);
+						player = new Player(new Vector2(x * _scaling, y * _scaling), this);
 						break;
-					case 3:
+					case 'F':
 						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
-						_enemies.Add(new Enemy(_scaling, level.EnemySize,
-							new Vector2(x * _scaling, y * _scaling), this, null));
+						_enemies.Add(new Fighter(new Vector2(x * _scaling, y * _scaling), this));
+						break;
+					case 'S':
+						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
+						_enemies.Add(new Shooter(new Vector2(x * _scaling, y * _scaling), this, level.ShootingRange,
+							level.ShootingCooldown, _customEntities));
 						break;
 					default:
 						_levelMap[y][x] = null;
@@ -62,24 +68,32 @@ namespace GameProject
 		
 		protected override void OnRender(D2DGraphics g)
 		{
+			//updates
+			_player.Update();
 			UpdateMap();
-			
+			foreach (var enemy in _enemies)
+				enemy.Update();
+			foreach (var entity in _customEntities.ToList())
+				entity.Update();
+
+			//map redrawing
 			for (var y = 0; y < _levelHeight; y++)
 			for (var x = 0; x < _levelWidth; x++)
 				_levelMap[y][x].Draw(g, _player.Position, Width, Height, _player.Size);
-			var sb = new StringBuilder();
+
+			//enemies redrawing
 			foreach (var enemy in _enemies)
-			{
-				enemy.Draw(g, Width, Height, _player.Position, _player.Size);
-#if DEBUG
-				sb.Append($"ENEMY: x: {enemy.Position.X}, y: {enemy.Position.Y}, vision: {enemy.PlayerInVision}\n");
-#endif
-			}
-#if DEBUG
-			g.DrawText(sb.ToString(), D2DColor.Black, "Consolas", 14, 0, 30);
-#endif
+				enemy.Draw(g, Width, Height);
+
+			//custom entities redrawing
+			foreach (var entity in _customEntities)
+				entity.Draw(g, Width, Height);
+
+			//player redrawing
 			_player.Draw(g, Width, Height);
 			
+			//health redrawing
+			g.FillRectangle(Width - 300, 0, 3 * _player.Health, 30, D2DColor.Red);
 			
 			Invalidate();
 		}
@@ -134,6 +148,12 @@ namespace GameProject
 		{
 			_player.Move(_left, _right, _up, _down);
 			MoveEnemies();
+			DamagePlayer();
+		}
+
+		private void DamagePlayer()
+		{
+			foreach (var enemy in _enemies) enemy.DamagePlayer();
 		}
 
 		private void MoveEnemies()

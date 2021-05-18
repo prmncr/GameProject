@@ -5,13 +5,13 @@ namespace GameProject.Tests.TestLevels
 {
 	public class TestLevel1 : ILevel
 	{
-		public int[][] Map => new[]
+		public string[] Map => new[]
 		{
-			new[] {1, 1, 1, 1, 1, 1},
-			new[] {1, 2, 0, 0, 0, 1},
-			new[] {1, 0, 0, 0, 0, 1},
-			new[] {1, 0, 0, 0, 3, 1},
-			new[] {1, 1, 1, 1, 1, 1}
+			"wwwwww",
+			"wpfffw",
+			"wffffw",
+			"wfffFw",
+			"wwwwww"
 		};
 
 		public float BlockScaling => 10;
@@ -20,17 +20,23 @@ namespace GameProject.Tests.TestLevels
 		public Vector2 EnemySize  => new(10, 10);
 		public float EnemySpeed => 4;
 		public float EnemyVisionDistance => 1000;
+		
+		//unused
+		public float ShootingRange { get; }
+		public int ShootingCooldown { get; }
+		public Vector2 BulletSize { get; }
+		public int BulletSpeed { get; }
 	}
 	
 	public class TestLevel2 : ILevel
 	{
-		public int[][] Map => new[]
+		public string[] Map => new[]
 		{
-			new[] {1, 1, 1, 1, 1, 1, 1},
-			new[] {1, 2, 0, 1, 0, 0, 1},
-			new[] {1, 0, 0, 1, 0, 0, 1},
-			new[] {1, 0, 0, 1, 0, 3, 1},
-			new[] {1, 1, 1, 1, 1, 1, 1}
+			"wwwwwww",
+			"wpfwffw",
+			"wffwffw",
+			"wffwfFw",
+			"wwwwwww"
 		};
 
 		public float BlockScaling => 10;
@@ -39,5 +45,11 @@ namespace GameProject.Tests.TestLevels
 		public Vector2 EnemySize  => new(10, 10);
 		public float EnemySpeed => 5;
 		public float EnemyVisionDistance => 1000;
+		
+		//unused
+		public float ShootingRange { get; }
+		public int ShootingCooldown { get; }
+		public Vector2 BulletSize { get; }
+		public int BulletSpeed { get; }
 	}
 }
