@@ -4,6 +4,6 @@ namespace GameProject.GameObjects
 {
 	public interface IEntitySpawner
 	{
-		List<IEntity> CustomEntities { get; }
+		List<Entity> CustomEntities { get; }
 	}
 }

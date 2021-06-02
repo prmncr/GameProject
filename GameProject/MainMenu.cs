@@ -20,7 +20,7 @@ namespace GameProject
 			Button btn = new()
 			{
 				Location = new Point((Width - 100) / 2, (Height - 50) / 2),
-				Size = new Size(100, 50), 
+				Size = new Size(100, 50),
 				Text = "Play"
 			};
 			btn.Click += (_, _) => MainWindow.GetInstance().ChangePage(Page.Selector);

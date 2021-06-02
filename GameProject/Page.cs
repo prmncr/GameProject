@@ -5,7 +5,9 @@ namespace GameProject
 {
 	public enum Page
 	{
-		MainMenu, Game, Selector
+		MainMenu,
+		Game,
+		Selector
 	}
 
 	internal static class PagesExtensions
@@ -17,7 +19,7 @@ namespace GameProject
 				Page.MainMenu => new MainMenu(),
 				Page.Game => new Game(level),
 				Page.Selector => new LevelSelector(),
-				_ => null,
+				_ => null
 			};
 		}
 	}

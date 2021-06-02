@@ -4,10 +4,10 @@ namespace GameProject.Levels
 {
 	public class Level1 : ILevel
 	{
-		public string[] Map => new []
+		public string[] Map => new[]
 		{
 			"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-			"wSwpfffffffffffffffffffwffffffffffffffffffw",
+			"wSwffffffffffffffffffffwffffffffffffffffffw",
 			"wffwfffffffffffffffffffwffffffffffffffffffw",
 			"wfffwffffffffffffffffffwffffffffffffffSfffw",
 			"wffffwfffffffffffffffffwffffffffffffffffffw",
@@ -17,7 +17,7 @@ namespace GameProject.Levels
 			"wfffffffffffffffffffffffffffffffffffffffffw",
 			"wffffffffffffffffffwwwwwwfffffffffffffffffw",
 			"wffffffffffffffffffwfffwwfffffffffffffffffw",
-			"wffffffffffffffffffwfffwwfffffffffffffffffw",
+			"wffffffffffffffffffwfffwwffffpffffffffffffw",
 			"wffffffffffffffffffwfffwwfffffffffffffffffw",
 			"wffffffffffffffffffwfffwwfffffffffffffffffw",
 			"wffffffffffffffffffwfffwwfffffffffffffffffw",

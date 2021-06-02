@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
-using unvell.D2DLib.WinForm;
 using GameProject.Levels;
+using unvell.D2DLib.WinForm;
 
 namespace GameProject
 {
@@ -15,7 +15,10 @@ namespace GameProject
 			Controls.Add(new MainMenu {Dock = DockStyle.Fill});
 		}
 
-		public static MainWindow GetInstance() => _instance ?? new MainWindow();
+		public static MainWindow GetInstance()
+		{
+			return _instance ?? new MainWindow();
+		}
 
 		public void ChangePage(Page page, ILevel level = null)
 		{

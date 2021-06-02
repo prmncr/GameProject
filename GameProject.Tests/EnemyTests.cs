@@ -16,7 +16,7 @@ namespace GameProject.Tests
 			var enemy = (field?.GetValue(map) as List<Enemy>)?[0];
 			Assert.IsTrue(enemy?.CheckPath().Item1);
 		}
-		
+
 		[Test]
 		public void CheckPathTest2()
 		{

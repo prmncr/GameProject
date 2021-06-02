@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using System.Windows.Forms;
 using GameProject.GameObjects;
 using GameProject.Levels;
@@ -14,14 +13,15 @@ namespace GameProject
 	public class Game : D2DControl
 	{
 		public ILevel Level { get; }
-		private readonly IStaticGameObject[][] _levelMap;
+		
+		private readonly List<Entity> _customEntities = new();
 		private readonly List<Enemy> _enemies = new();
-		private readonly List<IEntity> _customEntities = new();
+		private readonly IStaticGameObject[][] _levelMap;
 		private readonly int _levelWidth, _levelHeight;
+		private readonly Player _player;
 		private readonly float _scaling;
 		private bool _left, _right, _up, _down;
-		private readonly Player _player;
-
+		
 		public Game(ILevel level)
 		{
 			Level = level;
@@ -60,12 +60,13 @@ namespace GameProject
 						_levelMap[y][x] = null;
 						break;
 				}
+
 			_player = player;
 			foreach (var enemy in _enemies) enemy.Player = player;
 		}
 		
 		#region view
-		
+
 		protected override void OnRender(D2DGraphics g)
 		{
 			//updates
@@ -91,15 +92,15 @@ namespace GameProject
 
 			//player redrawing
 			_player.Draw(g, Width, Height);
-			
+
 			//health redrawing
 			g.FillRectangle(Width - 300, 0, 3 * _player.Health, 30, D2DColor.Red);
-			
+
 			Invalidate();
 		}
 
 		#endregion
-		
+
 		#region controller
 
 		protected override void OnKeyDown(KeyEventArgs e)
@@ -140,6 +141,11 @@ namespace GameProject
 			}
 		}
 
+		protected override void OnMouseUp(MouseEventArgs e)
+		{
+			_player.Shoot(e.Location);
+		}
+
 		#endregion
 
 		#region model
@@ -160,15 +166,47 @@ namespace GameProject
 		{
 			foreach (var enemy in _enemies) enemy.MakeMove();
 		}
-		
+
 		public IStaticGameObject GetCell(int x, int y)
 		{
 			return _levelMap[y][x];
 		}
 
+		public IStaticGameObject GetCellFloor(float x, float y)
+		{
+			return _levelMap[(int) MathF.Floor(y / _scaling)][(int) MathF.Floor(x / _scaling)];
+		}
+
+		public IStaticGameObject GetCellCeiling(float x, float y)
+		{
+			return _levelMap[(int) MathF.Ceiling(y / _scaling)][(int) MathF.Ceiling(x / _scaling)];
+		}
+
 		public IStaticGameObject GetCell(Vector2 posInScaling)
 		{
-			return _levelMap[(int) MathF.Floor(posInScaling.Y / _scaling)][(int) MathF.Floor(posInScaling.X / _scaling)];
+			return GetCellFloor(posInScaling.X, posInScaling.Y);
+		}
+
+		public float FloorToCell(float x)
+		{
+			return (int) MathF.Floor(x / _scaling) * _scaling;
+		}
+
+		public float CeilingToCell(float x)
+		{
+			return (int) MathF.Ceiling(x / _scaling) * _scaling;
+		}
+
+		public bool IsWallOnWithFloor((float, float) pos1, (float, float) pos2)
+		{
+			return GetCellFloor(pos1.Item1, pos1.Item2) is Wall || GetCellFloor(pos2.Item1,
+				pos2.Item2) is Wall;
+		}
+
+		public bool IsWallOnWithCeiling((float, float) pos1, (float, float) pos2)
+		{
+			return GetCellCeiling(pos1.Item1, pos1.Item2) is Wall || GetCellCeiling(pos2.Item1,
+				pos2.Item2) is Wall;
 		}
 
 		#endregion
