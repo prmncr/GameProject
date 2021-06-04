@@ -13,8 +13,8 @@ namespace GameProject.Tests
 		{
 			var map = new Game(new TestLevel1());
 			var field = typeof(Game).GetField("_enemies", BindingFlags.NonPublic | BindingFlags.Instance);
-			var enemy = (field?.GetValue(map) as List<Enemy>)?[0];
-			Assert.IsTrue(enemy?.CheckPath().Item1);
+			var enemies = field?.GetValue(map) as List<Enemy>;
+			Assert.IsTrue(enemies?[0].CheckPath().Item1);
 		}
 
 		[Test]
@@ -22,8 +22,8 @@ namespace GameProject.Tests
 		{
 			var map = new Game(new TestLevel2());
 			var field = typeof(Game).GetField("_enemies", BindingFlags.NonPublic | BindingFlags.Instance);
-			var enemy = (field?.GetValue(map) as List<Enemy>)?[0];
-			Assert.IsFalse(enemy?.CheckPath().Item1);
+			var enemies = field?.GetValue(map) as List<Enemy>;
+			Assert.IsFalse(enemies?[0].CheckPath().Item1);
 		}
 	}
 }

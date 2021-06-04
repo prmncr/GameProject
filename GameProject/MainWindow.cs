@@ -20,7 +20,7 @@ namespace GameProject
 			return _instance ?? new MainWindow();
 		}
 
-		public void ChangePage(Page page, ILevel level = null)
+		public void ChangePage(Page page, Level level = null)
 		{
 			var view = page.GetInstance(level);
 			if (view == null) return;

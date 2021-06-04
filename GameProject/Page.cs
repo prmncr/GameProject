@@ -12,7 +12,7 @@ namespace GameProject
 
 	internal static class PagesExtensions
 	{
-		public static D2DControl GetInstance(this Page page, ILevel level)
+		public static D2DControl GetInstance(this Page page, Level level)
 		{
 			return page switch
 			{

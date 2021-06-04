@@ -3,11 +3,11 @@ using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
-	public interface IStaticGameObject
+	public interface IBuilding
 	{
 		public Vector2 Position { get; }
 		public float Scaling { get; }
 
-		void Draw(D2DGraphics g, Vector2 offset, float width, float height, Vector2 playerSize);
+		void Draw(D2DGraphics g, Vector2 playerPos, float width, float height, Vector2 playerSize);
 	}
 }

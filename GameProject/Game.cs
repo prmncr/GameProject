@@ -12,27 +12,25 @@ namespace GameProject
 {
 	public class Game : D2DControl
 	{
-		public ILevel Level { get; }
-		
 		private readonly List<Entity> _customEntities = new();
 		private readonly List<Enemy> _enemies = new();
-		private readonly IStaticGameObject[][] _levelMap;
+		private readonly IBuilding[][] _levelMap;
 		private readonly int _levelWidth, _levelHeight;
 		private readonly Player _player;
 		private readonly float _scaling;
 		private bool _left, _right, _up, _down;
-		
-		public Game(ILevel level)
+
+		public Game(Level level)
 		{
 			Level = level;
 			_scaling = level.BlockScaling;
 			var levelMap = level.Map;
 			_levelHeight = levelMap!.Length;
 			_levelWidth = levelMap[0].Length;
-			_levelMap = new IStaticGameObject[_levelHeight][];
+			_levelMap = new IBuilding[_levelHeight][];
 			Player player = default;
 			for (var i = 0; i < _levelHeight; i++)
-				_levelMap[i] = new IStaticGameObject[_levelWidth];
+				_levelMap[i] = new IBuilding[_levelWidth];
 			for (var y = 0; y < _levelHeight; y++)
 			for (var x = 0; x < _levelWidth; x++)
 				switch (levelMap[y][x])
@@ -45,16 +43,16 @@ namespace GameProject
 						break;
 					case 'p':
 						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
-						player = new Player(new Vector2(x * _scaling, y * _scaling), this);
+						player = new Player(new Vector2(x * _scaling, y * _scaling), this, _enemies, _customEntities);
 						break;
 					case 'F':
 						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
-						_enemies.Add(new Fighter(new Vector2(x * _scaling, y * _scaling), this));
+						_enemies.Add(new Fighter(new Vector2(x * _scaling, y * _scaling), this, _enemies));
 						break;
 					case 'S':
 						_levelMap[y][x] = new Floor(new Vector2(x, y), _scaling);
 						_enemies.Add(new Shooter(new Vector2(x * _scaling, y * _scaling), this, level.ShootingRange,
-							level.ShootingCooldown, _customEntities));
+							level.ShootingCooldown, _enemies, _customEntities));
 						break;
 					default:
 						_levelMap[y][x] = null;
@@ -64,7 +62,9 @@ namespace GameProject
 			_player = player;
 			foreach (var enemy in _enemies) enemy.Player = player;
 		}
-		
+
+		public Level Level { get; }
+
 		#region view
 
 		protected override void OnRender(D2DGraphics g)
@@ -143,7 +143,7 @@ namespace GameProject
 
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			_player.Shoot(e.Location);
+			_player.Shoot(PointToClient(e.Location));
 		}
 
 		#endregion
@@ -167,24 +167,14 @@ namespace GameProject
 			foreach (var enemy in _enemies) enemy.MakeMove();
 		}
 
-		public IStaticGameObject GetCell(int x, int y)
-		{
-			return _levelMap[y][x];
-		}
-
-		public IStaticGameObject GetCellFloor(float x, float y)
+		private IBuilding GetCell(float x, float y)
 		{
 			return _levelMap[(int) MathF.Floor(y / _scaling)][(int) MathF.Floor(x / _scaling)];
 		}
 
-		public IStaticGameObject GetCellCeiling(float x, float y)
+		public IBuilding GetCell(Vector2 posInScaling)
 		{
-			return _levelMap[(int) MathF.Ceiling(y / _scaling)][(int) MathF.Ceiling(x / _scaling)];
-		}
-
-		public IStaticGameObject GetCell(Vector2 posInScaling)
-		{
-			return GetCellFloor(posInScaling.X, posInScaling.Y);
+			return GetCell(posInScaling.X, posInScaling.Y);
 		}
 
 		public float FloorToCell(float x)
@@ -197,15 +187,9 @@ namespace GameProject
 			return (int) MathF.Ceiling(x / _scaling) * _scaling;
 		}
 
-		public bool IsWallOnWithFloor((float, float) pos1, (float, float) pos2)
+		public bool IsWallOn((float, float) pos1, (float, float) pos2)
 		{
-			return GetCellFloor(pos1.Item1, pos1.Item2) is Wall || GetCellFloor(pos2.Item1,
-				pos2.Item2) is Wall;
-		}
-
-		public bool IsWallOnWithCeiling((float, float) pos1, (float, float) pos2)
-		{
-			return GetCellCeiling(pos1.Item1, pos1.Item2) is Wall || GetCellCeiling(pos2.Item1,
+			return GetCell(pos1.Item1, pos1.Item2) is Wall || GetCell(pos2.Item1,
 				pos2.Item2) is Wall;
 		}
 

@@ -2,18 +2,18 @@
 
 namespace GameProject.Levels
 {
-	public interface ILevel
+	public abstract record Level
 	{
-		string[] Map { get; }
-		float BlockScaling { get; }
-		Vector2 PlayerSize { get; }
-		float PlayerSpeed { get; }
-		Vector2 EnemySize { get; }
-		float EnemySpeed { get; }
-		float EnemyVisionDistance { get; }
-		float ShootingRange { get; }
-		int ShootingCooldown { get; }
-		Vector2 BulletSize { get; }
-		int BulletSpeed { get; }
+		public string[] Map { get; protected init; }
+		public float BlockScaling { get; protected init; }
+		public Vector2 PlayerSize { get; protected init; }
+		public float PlayerSpeed { get; protected init; }
+		public Vector2 EnemySize { get; protected init; }
+		public float EnemySpeed { get; protected init; }
+		public float EnemyVisionDistance { get; protected init; }
+		public float ShootingRange { get; protected init; }
+		public int ShootingCooldown { get; protected init; }
+		public Vector2 BulletSize { get; protected init; }
+		public int BulletSpeed { get; protected init; }
 	}
 }
