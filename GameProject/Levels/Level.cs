@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Numerics;
 using GameProject.GameObjects;
 
@@ -19,6 +20,7 @@ namespace GameProject.Levels
 		public int BulletSpeed { get; protected init; }
 		public IBuilding[][] BuiltMap { get; private set; }
 		public Player Player { get; private set; }
+		public ExitDoor Exit { get; private set; }
 
 		public void Initialize()
 		{
@@ -44,6 +46,9 @@ namespace GameProject.Levels
 					case 'S':
 						CreateShooter(x, y);
 						break;
+					case 'E':
+						CreateExit(x, y);
+						break;
 					default:
 						BuiltMap[y][x] = null;
 						break;
@@ -52,7 +57,7 @@ namespace GameProject.Levels
 
 		private void CreateWall(int x, int y)
 		{
-			BuiltMap[y][x] = new Wall(new Vector2(x, y), BlockScale);
+			BuiltMap[y][x] = new Wall(new Vector2(x, y));
 		}
 
 		private void CreateFloor(int x, int y)
@@ -69,13 +74,20 @@ namespace GameProject.Levels
 		private void CreateFighter(int x, int y)
 		{
 			CreateFloor(x, y);
-			LevelInfo.Enemies.Add(new Fighter(new Vector2(x * BlockScale, y * BlockScale)));
+			LevelController.Enemies.Add(new Fighter(new Vector2(x * BlockScale, y * BlockScale)));
 		}
 
 		private void CreateShooter(int x, int y)
 		{
 			CreateFloor(x, y);
-			LevelInfo.Enemies.Add(new Shooter(new Vector2(x * BlockScale, y * BlockScale)));
+			LevelController.Enemies.Add(new Shooter(new Vector2(x * BlockScale, y * BlockScale)));
+		}
+		
+		private void CreateExit(int x, int y)
+		{
+			var exit= new ExitDoor(new Vector2(x, y));
+			BuiltMap[y][x] = exit;
+			Exit = exit;
 		}
 
 		private IBuilding GetCell(float x, float y)
@@ -100,8 +112,8 @@ namespace GameProject.Levels
 
 		public bool IsWallOn((float, float) pos1, (float, float) pos2)
 		{
-			return GetCell(pos1.Item1, pos1.Item2) is Wall || GetCell(pos2.Item1,
-				pos2.Item2) is Wall;
+			return GetCell(pos1.Item1, pos1.Item2) is Wall || GetCell(pos2.Item1, pos2.Item2) is Wall || 
+			       GetCell(pos1.Item1, pos1.Item2) is ExitDoor && !LevelController.Level.Exit.IsOpen || GetCell(pos2.Item1, pos2.Item2) is ExitDoor && !LevelController.Level.Exit.IsOpen;
 		}
 	}
 }

@@ -17,7 +17,7 @@ namespace GameProject.Levels
 				"wfwfwfw",
 				"wfwfwfw",
 				"wFwfwFw",
-				"wwwwwww"
+				"wwwEwww"
 			};
 			BlockScale = 50;
 			PlayerSize = new Vector2(40, 40);

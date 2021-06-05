@@ -9,7 +9,7 @@ namespace GameProject.GameObjects
 	{
 		public Floor(Vector2 cellPos)
 		{
-			Position = cellPos * LevelInfo.Level.BlockScale;
+			Position = cellPos * LevelController.Level.BlockScale;
 		}
 
 		public Vector2 Position { get; }
@@ -17,10 +17,10 @@ namespace GameProject.GameObjects
 		public void Redraw(D2DGraphics g, float width, float height)
 		{
 			g.FillRectangle(
-				MathF.Ceiling(width / 2) + Position.X - MathF.Ceiling(LevelInfo.Player.Size.X / 2) -
-				MathF.Ceiling(LevelInfo.Player.Position.X),
-				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(LevelInfo.Player.Size.Y / 2) -
-				MathF.Ceiling(LevelInfo.Player.Position.Y), LevelInfo.Level.BlockScale, LevelInfo.Level.BlockScale,
+				MathF.Ceiling(width / 2) + Position.X - MathF.Ceiling(LevelController.Player.Size.X / 2) -
+				MathF.Ceiling(LevelController.Player.Position.X),
+				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(LevelController.Player.Size.Y / 2) -
+				MathF.Ceiling(LevelController.Player.Position.Y), LevelController.Level.BlockScale, LevelController.Level.BlockScale,
 				D2DColor.Gray);
 		}
 	}

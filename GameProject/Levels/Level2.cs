@@ -9,27 +9,27 @@ namespace GameProject.Levels
 		{
 			StringMap = new[]
 			{
-				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-				"wSwffffffffffffffffffffwffffffffffffffffffw",
-				"wffwfffffffffffffffffffwffffffffffffffffffw",
-				"wfffwffffffffffffffffffwffffffffffffffSfffw",
-				"wffffwfffffffffffffffffwffffffffffffffffffw",
-				"wfffffwffffffffffffffffwffffffffffffffffffw",
-				"wffffffwfwwwwwwwwwwwwwwwffffffffffffffffffw",
-				"wfffffffffffffffffffffffffffffffffffffffffw",
-				"wfffffffffffffffffffffffffffffffffffffffffw",
-				"wffffffffffffffffffwwwwwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwffffpffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfSfwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwffffffffffffFffffw",
-				"wffffffffffffffffffwwwwwwfffffffffffffffffw",
-				"wfffffFfffffffffffffffffffffffffffffffffffw",
-				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+				"wffffffffffffffffffffffffffwfffpfffw",
+				"wffffffffffffffffffffffffffwfffffffw",
+				"wfffffffffffffffffffffffffFffffffffw",
+				"wffffffffffffffffffffffffffffffffffw",
+				"wfffffffffffffffffffffffffFffffffffw",
+				"wffffffffffffffffffffffffffwfffffffw",
+				"wffffffffffffffffffffffffffwfffffffw",
+				"wffffffffffffffffffffffffffwfffffffw",
+				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwfffffffw",
+				"wffffffffffffffffffffffffffffffffffw",
+				"wffffffffffffffffffffffffffffffffffw",
+				"wfffffwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+				"wfffffwffffffffffffffffffffffffffffw",
+				"wfffffwffffffffffffffffffffffffffffw",
+				"wffffffSfffffffffffffffffffffffffffw",
+				"wffffffffffffffffffffffffffffffffffw",
+				"wffffffSfffffffffffffffffffffffffffw",
+				"wfffffwffffffffffffffffffffffffffffw",
+				"wfffffwffffffffffffffffffffffffffffw",
+				"wwwEwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
 			};
 			BlockScale = 50;
 			PlayerSize = new Vector2(40, 40);

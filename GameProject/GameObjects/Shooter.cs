@@ -10,19 +10,19 @@ namespace GameProject.GameObjects
 
 		public Shooter(Vector2 startPos) : base(startPos)
 		{
-			_shootingCooldown = LevelInfo.Level.ShootingCooldown;
+			_shootingCooldown = LevelController.Level.ShootingCooldown;
 		}
 
-		private int _shootingCooldownMax => LevelInfo.Level.ShootingCooldown;
+		private int _shootingCooldownMax => LevelController.Level.ShootingCooldown;
 
-		private float _shootRange => LevelInfo.Level.ShootingRange;
+		private float _shootRange => LevelController.Level.ShootingRange;
 
-		public override void Draw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, float width, float height)
 		{
-			base.Draw(g, width, height, D2DColor.Blue);
+			base.Redraw(g, width, height, D2DColor.Blue);
 		}
 
-		public override void Update()
+		public override void UpdateCounters()
 		{
 			if (_shootingCooldown > 0)
 				_shootingCooldown--;
@@ -45,7 +45,7 @@ namespace GameProject.GameObjects
 		{
 			var (pathExist, path) = CheckPath();
 			PlayerInVision = pathExist;
-			var distance = (LevelInfo.Player.Position - Position).Length();
+			var distance = (LevelController.Player.Position - Position).Length();
 			if (pathExist && distance <= VisionDistance)
 			{
 				if (distance <= _shootRange) Shoot(path);
@@ -65,7 +65,7 @@ namespace GameProject.GameObjects
 		private void Shoot(Vector2 path)
 		{
 			if (_shootingCooldown != 0) return;
-			LevelInfo.SummonedEntities.Add(new Bullet(this, Position + Size / 2, path));
+			LevelController.SummonedEntities.Add(new Bullet(this, Position + Size / 2, path));
 			_shootingCooldown = _shootingCooldownMax;
 		}
 	}

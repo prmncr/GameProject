@@ -13,7 +13,7 @@ namespace GameProject.Tests
 		public void EnemyCanMoveToPlayerWithoutWalls()
 		{
 			var map = new Game(typeof(TestLevel1));
-			var enemies = LevelInfo.Enemies;
+			var enemies = LevelController.Enemies;
 			Assert.IsTrue(enemies?[0].CheckPath().Item1);
 		}
 
@@ -21,7 +21,7 @@ namespace GameProject.Tests
 		public void EnemyCanNotMoveToPlayerThroughWalls()
 		{
 			var map = new Game(typeof(TestLevel2));
-			var enemies = LevelInfo.Enemies;
+			var enemies = LevelController.Enemies;
 			Assert.IsFalse(enemies?[0].CheckPath().Item1);
 		}
 	}

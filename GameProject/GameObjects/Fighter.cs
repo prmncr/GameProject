@@ -12,12 +12,12 @@ namespace GameProject.GameObjects
 		{
 		}
 
-		public override void Draw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, float width, float height)
 		{
-			base.Draw(g, width, height, D2DColor.Green);
+			Redraw(g, width, height, D2DColor.Green);
 		}
 
-		public override void Update()
+		public override void UpdateCounters()
 		{
 			if (Resist > 0)
 			{
@@ -34,7 +34,7 @@ namespace GameProject.GameObjects
 		{
 			var (pathExist, path) = CheckPath();
 			PlayerInVision = pathExist;
-			if (pathExist && (LevelInfo.Player.Position - Position).Length() <= VisionDistance)
+			if (pathExist && (LevelController.Player.Position - Position).Length() <= VisionDistance)
 			{
 				LastPath = path;
 				var moveTo = Move(path.X > 0, path.Y > 0);
@@ -52,9 +52,9 @@ namespace GameProject.GameObjects
 		public override void DamagePlayer()
 		{
 			if (AreIntersected(
-				new RectangleF(LevelInfo.Player.Position.X, LevelInfo.Player.Position.Y, LevelInfo.Player.Size.X,
-					LevelInfo.Player.Size.Y),
-				new RectangleF(Position.X, Position.Y, Size.X, Size.Y))) LevelInfo.Player.TakeDamage(10, 60);
+				new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y, LevelController.Player.Size.X,
+					LevelController.Player.Size.Y),
+				new RectangleF(Position.X, Position.Y, Size.X, Size.Y))) LevelController.Player.TakeDamage(10, 60);
 		}
 
 		private static bool AreIntersected(RectangleF r0, RectangleF r1)

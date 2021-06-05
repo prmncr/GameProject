@@ -20,20 +20,20 @@ namespace GameProject.GameObjects
 			if (sender is Player) _fromPlayer = true;
 		}
 
-		private static Vector2 Size => LevelInfo.Level.BulletSize;
-		private static int Speed => LevelInfo.Level.BulletSpeed;
+		private static Vector2 Size => LevelController.Level.BulletSize;
+		private static int Speed => LevelController.Level.BulletSpeed;
 
-		public override void Draw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, float width, float height)
 		{
-			var renderPos = Math.ConvertToRenderPos(_position, LevelInfo.Player.Position, LevelInfo.Player.Size,
+			var renderPos = Math.ConvertToRenderPos(_position, LevelController.Player.Position, LevelController.Player.Size,
 				new Vector2(width, height));
 			g.FillRectangle(renderPos.X, renderPos.Y, Size.X, Size.Y, D2DColor.Gold);
 		}
 
-		public override void Update()
+		public override void UpdateCounters()
 		{
 			_position += _dPos;
-			if (LevelInfo.Level.GetCell(_position + _dPos - Size / 2) is Wall) LevelInfo.SummonedEntities.Remove(this);
+			if (LevelController.Level.GetCell(_position + _dPos - Size / 2) is Wall) LevelController.SummonedEntities.Remove(this);
 			switch (_fromPlayer)
 			{
 				case false:
@@ -47,32 +47,26 @@ namespace GameProject.GameObjects
 
 		private void DamagePlayer()
 		{
-			if (!AreIntersected(
-				new RectangleF(LevelInfo.Player.Position.X, LevelInfo.Player.Position.Y, LevelInfo.Player.Size.X,
-					LevelInfo.Player.Size.Y),
+			if (!Math.AreIntersected(
+				new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y, LevelController.Player.Size.X,
+					LevelController.Player.Size.Y),
 				new RectangleF(_position.X, _position.Y, Size.X, Size.Y))) return;
-			LevelInfo.Player.TakeDamage(20, 60);
-			LevelInfo.SummonedEntities.Remove(this);
+			LevelController.Player.TakeDamage(20, 60);
+			LevelController.SummonedEntities.Remove(this);
 		}
 
 		private void DamageEnemies()
 		{
 			if (!_fromPlayer) return;
-			var hits = LevelInfo.Enemies.Where(enemy => AreIntersected(
+			var hits = LevelController.Enemies.Where(enemy => Math.AreIntersected(
 				new RectangleF(enemy.Position.X, enemy.Position.Y, enemy.Size.X, enemy.Size.Y),
 				new RectangleF(_position.X, _position.Y, Size.X, Size.Y))).ToList();
 			if (!hits.Any()) return;
 			{
 				foreach (var enemy in hits)
 					enemy.TakeDamage(30, 15);
-				LevelInfo.SummonedEntities.Remove(this);
+				LevelController.SummonedEntities.Remove(this);
 			}
-		}
-
-		private static bool AreIntersected(RectangleF r0, RectangleF r1)
-		{
-			return MathF.Min(r0.Right, r1.Right) - MathF.Max(r0.Left, r1.Left) >= 0 &&
-			       MathF.Min(r0.Bottom, r1.Bottom) - MathF.Max(r0.Top, r1.Top) >= 0;
 		}
 	}
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using GameProject.Levels;
@@ -13,44 +14,54 @@ namespace GameProject
 
 		public Game(Type level)
 		{
-			LevelInfo.Restart(level);
+			LevelController.Restart(level);
 		}
-
-		#region view
 
 		protected override void OnRender(D2DGraphics g)
 		{
-			//updates
-			LevelInfo.Player.Update();
-			UpdateMap();
-			foreach (var enemy in LevelInfo.Enemies)
-				enemy.Update();
-			foreach (var entity in LevelInfo.SummonedEntities.ToList())
-				entity.Update();
+			#region math model updates
+			
+			// player step
+			LevelController.Player.Move(_left, _right, _up, _down);
+			LevelController.Player.UpdateCounters();
+			if (Math.AreIntersected(new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y,
+						LevelController.Player.Size.X, LevelController.Player.Size.Y),
+					LevelController.Level.Exit) && LevelController.Level.Exit.IsOpen)
+				MainWindow.GetInstance().ChangePage(Page.Selector);
+			
+			// enemies step
+			foreach (var enemy in LevelController.Enemies)
+			{
+				enemy.MakeMove();
+				enemy.UpdateCounters();
+				enemy.DamagePlayer();
+			}
+			
+			// summmons step
+			foreach (var entity in LevelController.SummonedEntities.ToList())
+				entity.UpdateCounters();
 
-			//map redrawing
-			LevelInfo.Redraw(g, Width, Height);
+			if (!LevelController.Enemies.Any())
+				LevelController.Level.Exit.IsOpen = true;
+			#endregion
 
-			//enemies redrawing
-			foreach (var enemy in LevelInfo.Enemies)
-				enemy.Draw(g, Width, Height);
+			#region view updates
+			
+			LevelController.Redraw(g, Width, Height);
 
-			//custom entities redrawing
-			foreach (var entity in LevelInfo.SummonedEntities)
-				entity.Draw(g, Width, Height);
-
-			//player redrawing
-			LevelInfo.Player.Draw(g, Width, Height);
-
-			//health redrawing
-			g.FillRectangle(Width - 300, 0, 3 * LevelInfo.Player.Health, 30, D2DColor.Red);
+			foreach (var enemy in LevelController.Enemies)
+				enemy.Redraw(g, Width, Height);
+			
+			foreach (var entity in LevelController.SummonedEntities)
+				entity.Redraw(g, Width, Height);
+			
+			LevelController.Player.Redraw(g, Width, Height);
+			g.FillRectangle(Width - 300, 0, 3 * LevelController.Player.Health, 30, D2DColor.Red);
 
 			Invalidate();
+			
+			#endregion
 		}
-
-		#endregion
-
-		#region controller
 
 		protected override void OnKeyDown(KeyEventArgs e)
 		{
@@ -92,30 +103,7 @@ namespace GameProject
 
 		protected override void OnMouseUp(MouseEventArgs e)
 		{
-			LevelInfo.Player.Shoot(PointToClient(e.Location));
+			LevelController.Player.Shoot(PointToClient(e.Location));
 		}
-
-		#endregion
-
-		#region model
-
-		private void UpdateMap()
-		{
-			LevelInfo.Player.Move(_left, _right, _up, _down);
-			MoveEnemies();
-			DamagePlayer();
-		}
-
-		private void DamagePlayer()
-		{
-			foreach (var enemy in LevelInfo.Enemies) enemy.DamagePlayer();
-		}
-
-		private void MoveEnemies()
-		{
-			foreach (var enemy in LevelInfo.Enemies) enemy.MakeMove();
-		}
-
-		#endregion
 	}
 }

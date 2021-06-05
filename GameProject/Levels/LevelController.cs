@@ -5,9 +5,9 @@ using unvell.D2DLib;
 
 namespace GameProject.Levels
 {
-	public static class LevelInfo
+	public static class LevelController
 	{
-		public static Level Level;
+		public static Level Level { get; private set; }
 		public static Player Player => Level.Player;
 
 		public static List<Entity> SummonedEntities { get; private set; } = new();

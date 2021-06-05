@@ -8,8 +8,8 @@ namespace GameProject.GameObjects
 		protected int Resist;
 		public float Health { get; protected set; } = 100;
 
-		public abstract void Draw(D2DGraphics g, float width, float height);
+		public abstract void Redraw(D2DGraphics g, float width, float height);
 
-		public abstract void Update();
+		public abstract void UpdateCounters();
 	}
 }
