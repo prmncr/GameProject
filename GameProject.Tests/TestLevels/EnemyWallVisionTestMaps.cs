@@ -7,7 +7,7 @@ namespace GameProject.Tests.TestLevels
 	{
 		public TestLevel1()
 		{
-			Map = new[]
+			StringMap = new[]
 			{
 				"wwwwww",
 				"wpfffw",
@@ -15,11 +15,9 @@ namespace GameProject.Tests.TestLevels
 				"wfffFw",
 				"wwwwww"
 			};
-			BlockScaling = 10;
+			BlockScale = 10;
 			PlayerSize = new Vector2(10, 10);
-			PlayerSpeed = 5;
 			EnemySize = new Vector2(10, 10);
-			EnemySpeed = 4;
 			EnemyVisionDistance = 1000;
 		}
 	}
@@ -28,7 +26,7 @@ namespace GameProject.Tests.TestLevels
 	{
 		public TestLevel2()
 		{
-			Map = new[]
+			StringMap = new[]
 			{
 				"wwwwwww",
 				"wpfwffw",
@@ -37,11 +35,9 @@ namespace GameProject.Tests.TestLevels
 				"wwwwwww"
 			};
 
-			BlockScaling = 10;
+			BlockScale = 10;
 			PlayerSize = new Vector2(10, 10);
-			PlayerSpeed = 5;
 			EnemySize = new Vector2(10, 10);
-			EnemySpeed = 5;
 			EnemyVisionDistance = 1000;
 		}
 	}

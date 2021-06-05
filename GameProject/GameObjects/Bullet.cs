@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Numerics;
@@ -10,70 +9,63 @@ namespace GameProject.GameObjects
 {
 	public class Bullet : Entity
 	{
-		private readonly List<Entity> _customEntities;
 		private readonly Vector2 _dPos;
-		private readonly List<Enemy> _enemies;
-		private readonly Level _level;
-		private readonly Game _map;
-		private readonly Vector2 _path;
-
-		private readonly Player _player;
-		private readonly Vector2 _size;
-		private readonly int _speed;
 		private readonly bool _fromPlayer;
 		private Vector2 _position;
 
-		public Bullet(Entity sender, Vector2 position, Vector2 path, Game map, List<Enemy> enemies,
-			List<Entity> customEntities, Player player)
+		public Bullet(Entity sender, Vector2 position, Vector2 path)
 		{
-			_map = map;
-			_level = map.Level;
-			_player = player;
 			_position = position;
-			_path = path;
-			_size = _level.BulletSize;
-			_speed = _level.BulletSpeed;
-			_dPos = _path / _path.Length() * _speed;
-			_customEntities = customEntities;
-			_enemies = enemies;
+			_dPos = path / path.Length() * Speed;
 			if (sender is Player) _fromPlayer = true;
 		}
 
+		private static Vector2 Size => LevelInfo.Level.BulletSize;
+		private static int Speed => LevelInfo.Level.BulletSpeed;
+
 		public override void Draw(D2DGraphics g, float width, float height)
 		{
-			var renderPos =
-				Math.ConvertToRenderPos(_position, _player.Position, _player.Size, new Vector2(width, height));
-			g.FillRectangle(renderPos.X, renderPos.Y, _size.X, _size.Y, D2DColor.Gold);
+			var renderPos = Math.ConvertToRenderPos(_position, LevelInfo.Player.Position, LevelInfo.Player.Size,
+				new Vector2(width, height));
+			g.FillRectangle(renderPos.X, renderPos.Y, Size.X, Size.Y, D2DColor.Gold);
 		}
 
 		public override void Update()
 		{
 			_position += _dPos;
-			if (_map.GetCell(_position + _dPos - _size / 2) is Wall) _customEntities.Remove(this);
-			if (!_fromPlayer) DamagePlayer();
-			if (_fromPlayer) DamageEnemies();
+			if (LevelInfo.Level.GetCell(_position + _dPos - Size / 2) is Wall) LevelInfo.SummonedEntities.Remove(this);
+			switch (_fromPlayer)
+			{
+				case false:
+					DamagePlayer();
+					break;
+				case true:
+					DamageEnemies();
+					break;
+			}
 		}
 
 		private void DamagePlayer()
 		{
 			if (!AreIntersected(
-				new RectangleF(_player.Position.X, _player.Position.Y, _player.Size.X, _player.Size.Y),
-				new RectangleF(_position.X, _position.Y, _size.X, _size.Y))) return;
-			_player.TakeDamage(20, 60);
-			_customEntities.Remove(this);
+				new RectangleF(LevelInfo.Player.Position.X, LevelInfo.Player.Position.Y, LevelInfo.Player.Size.X,
+					LevelInfo.Player.Size.Y),
+				new RectangleF(_position.X, _position.Y, Size.X, Size.Y))) return;
+			LevelInfo.Player.TakeDamage(20, 60);
+			LevelInfo.SummonedEntities.Remove(this);
 		}
 
 		private void DamageEnemies()
 		{
 			if (!_fromPlayer) return;
-			var hits = _enemies.Where(enemy => AreIntersected(
+			var hits = LevelInfo.Enemies.Where(enemy => AreIntersected(
 				new RectangleF(enemy.Position.X, enemy.Position.Y, enemy.Size.X, enemy.Size.Y),
-				new RectangleF(_position.X, _position.Y, _size.X, _size.Y))).ToList();
+				new RectangleF(_position.X, _position.Y, Size.X, Size.Y))).ToList();
 			if (!hits.Any()) return;
 			{
 				foreach (var enemy in hits)
 					enemy.TakeDamage(30, 15);
-				_customEntities.Remove(this);
+				LevelInfo.SummonedEntities.Remove(this);
 			}
 		}
 

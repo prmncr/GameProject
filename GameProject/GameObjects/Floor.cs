@@ -1,27 +1,26 @@
 ﻿using System;
 using System.Numerics;
+using GameProject.Levels;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Floor : IBuilding
 	{
-		public Floor(Vector2 cellPos, float scaling)
+		public Floor(Vector2 cellPos)
 		{
-			Position = cellPos * scaling;
-			Scaling = scaling;
+			Position = cellPos * LevelInfo.Level.BlockScale;
 		}
 
 		public Vector2 Position { get; }
-		public float Scaling { get; }
 
-		public void Draw(D2DGraphics g, Vector2 playerPos, float width, float height, Vector2 playerSize)
+		public void Redraw(D2DGraphics g, float width, float height)
 		{
 			g.FillRectangle(
-				MathF.Ceiling(width / 2) + Position.X - MathF.Ceiling(playerSize.X / 2) - MathF.Ceiling(playerPos.X),
-				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(playerSize.Y / 2) - MathF.Ceiling(playerPos.Y),
-				Scaling,
-				Scaling,
+				MathF.Ceiling(width / 2) + Position.X - MathF.Ceiling(LevelInfo.Player.Size.X / 2) -
+				MathF.Ceiling(LevelInfo.Player.Position.X),
+				MathF.Ceiling(height / 2) + Position.Y - MathF.Ceiling(LevelInfo.Player.Size.Y / 2) -
+				MathF.Ceiling(LevelInfo.Player.Position.Y), LevelInfo.Level.BlockScale, LevelInfo.Level.BlockScale,
 				D2DColor.Gray);
 		}
 	}

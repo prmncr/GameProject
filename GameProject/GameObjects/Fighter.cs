@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using GameProject.Levels;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Fighter : Enemy
 	{
-		public Fighter(Vector2 startPos, Game level, List<Enemy> enemies) : base(startPos, level, enemies)
+		public Fighter(Vector2 startPos) : base(startPos)
 		{
 		}
 
@@ -34,7 +34,7 @@ namespace GameProject.GameObjects
 		{
 			var (pathExist, path) = CheckPath();
 			PlayerInVision = pathExist;
-			if (pathExist && (Player.Position - Position).Length() <= VisionDistance)
+			if (pathExist && (LevelInfo.Player.Position - Position).Length() <= VisionDistance)
 			{
 				LastPath = path;
 				var moveTo = Move(path.X > 0, path.Y > 0);
@@ -51,8 +51,10 @@ namespace GameProject.GameObjects
 
 		public override void DamagePlayer()
 		{
-			if (AreIntersected(new RectangleF(Player.Position.X, Player.Position.Y, Player.Size.X, Player.Size.Y),
-				new RectangleF(Position.X, Position.Y, Size.X, Size.Y))) Player.TakeDamage(10, 60);
+			if (AreIntersected(
+				new RectangleF(LevelInfo.Player.Position.X, LevelInfo.Player.Position.Y, LevelInfo.Player.Size.X,
+					LevelInfo.Player.Size.Y),
+				new RectangleF(Position.X, Position.Y, Size.X, Size.Y))) LevelInfo.Player.TakeDamage(10, 60);
 		}
 
 		private static bool AreIntersected(RectangleF r0, RectangleF r1)

@@ -2,35 +2,24 @@
 
 namespace GameProject.Levels
 {
+	[Level]
 	public record Level1 : Level
 	{
 		public Level1()
 		{
-			Map = new[]
+			StringMap = new[]
 			{
-				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-				"wSwffffffffffffffffffffwffffffffffffffffffw",
-				"wffwfffffffffffffffffffwffffffffffffffffffw",
-				"wfffwffffffffffffffffffwffffffffffffffSfffw",
-				"wffffwfffffffffffffffffwffffffffffffffffffw",
-				"wfffffwffffffffffffffffwffffffffffffffffffw",
-				"wffffffwfwwwwwwwwwwwwwwwffffffffffffffffffw",
-				"wfffffffffffffffffffffffffffffffffffffffffw",
-				"wfffffffffffffffffffffffffffffffffffffffffw",
-				"wffffffffffffffffffwwwwwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwffffpffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwfffffffffffffffffw",
-				"wffffffffffffffffffwfSfwwfffffffffffffffffw",
-				"wffffffffffffffffffwfffwwffffffffffffFffffw",
-				"wffffffffffffffffffwwwwwwfffffffffffffffffw",
-				"wfffffFfffffffffffffffffffffffffffffffffffw",
-				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+				"wwwwwww",
+				"wFwpwFw",
+				"wfwfwfw",
+				"wfwfwfw",
+				"wfffffw",
+				"wfwfwfw",
+				"wfwfwfw",
+				"wFwfwFw",
+				"wwwwwww"
 			};
-			BlockScaling = 50;
+			BlockScale = 50;
 			PlayerSize = new Vector2(40, 40);
 			PlayerSpeed = 5;
 			EnemySize = new Vector2(40, 40);
@@ -41,5 +30,9 @@ namespace GameProject.Levels
 			BulletSize = new Vector2(10, 10);
 			BulletSpeed = 20;
 		}
+
+#pragma warning disable 108,114
+		private static string Name => "Level 1";
+#pragma warning restore 108,114
 	}
 }

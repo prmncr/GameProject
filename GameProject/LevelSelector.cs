@@ -1,4 +1,6 @@
 ﻿using System.Drawing;
+using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,14 +20,30 @@ namespace GameProject
 		{
 			await Task.Run(() => Thread.Sleep(5));
 			BackColor = Color.Gray;
-			Button btn = new()
+			var group = new FlowLayoutPanel
 			{
-				Location = new Point((Width - 100) / 2, (Height - 50) / 2),
-				Size = new Size(100, 50),
-				Text = "Level 1"
+				Width = 250, Height = 400, Left = Width / 2 - 250 / 2, Top = Height / 2 - 400 / 2,
+				FlowDirection = FlowDirection.TopDown
 			};
-			btn.Click += (_, _) => MainWindow.GetInstance().ChangePage(Page.Game, new Level1());
-			Controls.Add(btn);
+			var types = Assembly
+				.GetExecutingAssembly()
+				.GetTypes();
+			var levelTypes = types.Where(t => t.CustomAttributes.Any(x => x.AttributeType == typeof(LevelAttribute)));
+			foreach (var levelType in levelTypes)
+			{
+				var name =
+					levelType.GetProperty("Name", BindingFlags.NonPublic | BindingFlags.Static)
+						?.GetValue(null) as string;
+				Button btn = new()
+				{
+					Size = new Size(200, 50),
+					Text = name
+				};
+				btn.Click += (_, _) => MainWindow.GetInstance().ChangePage(Page.Game, levelType);
+				group.Controls.Add(btn);
+			}
+
+			Controls.Add(group);
 		}
 	}
 }

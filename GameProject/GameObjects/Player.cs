@@ -1,54 +1,40 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
+using GameProject.Levels;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Player : Entity
 	{
-		private readonly List<Entity> _customEntities;
-		private readonly List<Enemy> _enemies;
-		private readonly Game _map;
-		private readonly float _scaling;
-		private readonly int _shootingCooldownMax;
-		private readonly Vector2 _size;
-		private readonly float _speed;
 		private float _controlHeight;
 		private float _controlWidth;
 		private Vector2 _position;
-		private int _shootingCooldown;
 
-
-		public Player(Vector2 startPos, Game map, List<Enemy> enemies, List<Entity> bullets)
+		public Player(Vector2 startPos)
 		{
-			_map = map;
 			_position = startPos;
-			_customEntities = bullets;
-			_enemies = enemies;
-
-			_size = map.Level.PlayerSize;
-			_scaling = map.Level.BlockScaling;
-			_speed = map.Level.PlayerSpeed;
 		}
 
+		public Vector2 Size => LevelInfo.Level.PlayerSize;
+		private static float Speed => LevelInfo.Level.PlayerSpeed;
+
 		public Vector2 Position => _position;
-		public Vector2 Size => _size;
 		private float Top => _position.Y;
-		private float Bottom => _position.Y + _size.Y;
+		private float Bottom => _position.Y + Size.Y;
 		private float Left => _position.X;
-		private float Right => _position.X + _size.X;
+		private float Right => _position.X + Size.X;
 
 		public override void Draw(D2DGraphics g, float width, float height)
 		{
 			_controlWidth = width;
 			_controlHeight = height;
 			g.FillRectangle(
-				MathF.Ceiling((width - _size.X) / 2),
-				MathF.Ceiling((height - _size.Y) / 2),
-				_size.X,
-				_size.Y,
+				MathF.Ceiling((width - Size.X) / 2),
+				MathF.Ceiling((height - Size.Y) / 2),
+				Size.X,
+				Size.Y,
 				IsResistance ? D2DColor.DarkGreen : D2DColor.LightGreen);
 		}
 
@@ -70,37 +56,37 @@ namespace GameProject.GameObjects
 			var dx = 0f;
 			var dy = 0f;
 
-			var predictedBottom = Bottom + _speed;
-			var bottomOnWall = _map.IsWallOn((Left + 1, predictedBottom), (Right - 1, predictedBottom));
+			var predictedBottom = Bottom + Speed;
+			var bottomOnWall = LevelInfo.Level.IsWallOn((Left + 1, predictedBottom), (Right - 1, predictedBottom));
 
-			var predictedTop = Top - _speed;
-			var topOnWall = _map.IsWallOn((Right - 1, predictedTop), (Left + 1, predictedTop));
+			var predictedTop = Top - Speed;
+			var topOnWall = LevelInfo.Level.IsWallOn((Right - 1, predictedTop), (Left + 1, predictedTop));
 
-			var predictedRight = Right + _speed;
-			var leftOnWall = _map.IsWallOn((predictedRight, Top + 1), (predictedRight, Bottom - 1));
+			var predictedRight = Right + Speed;
+			var leftOnWall = LevelInfo.Level.IsWallOn((predictedRight, Top + 1), (predictedRight, Bottom - 1));
 
-			var predictedLeft = Left - _speed;
-			var rightOnWall = _map.IsWallOn((predictedLeft, Bottom - 1), (predictedLeft, Top + 1));
+			var predictedLeft = Left - Speed;
+			var rightOnWall = LevelInfo.Level.IsWallOn((predictedLeft, Bottom - 1), (predictedLeft, Top + 1));
 
 			if (down && !up)
 				dy += bottomOnWall
-					? _map.FloorToCell(predictedBottom) - Bottom
-					: _speed / ((left || right) && !leftOnWall && !rightOnWall ? MathF.Sqrt(2) : 1);
+					? LevelInfo.Level.FloorToCell(predictedBottom) - Bottom
+					: Speed / ((left || right) && !leftOnWall && !rightOnWall ? MathF.Sqrt(2) : 1);
 
 			if (up && !down)
 				dy += topOnWall
-					? _map.CeilingToCell(predictedTop) - Top
-					: -_speed / ((left || right) && !leftOnWall && !rightOnWall ? MathF.Sqrt(2) : 1);
+					? LevelInfo.Level.CeilingToCell(predictedTop) - Top
+					: -Speed / ((left || right) && !leftOnWall && !rightOnWall ? MathF.Sqrt(2) : 1);
 
 			if (right && !left)
 				dx += leftOnWall
-					? _map.FloorToCell(predictedRight) - Right
-					: _speed / ((up || down) && !topOnWall && !bottomOnWall ? MathF.Sqrt(2) : 1);
+					? LevelInfo.Level.FloorToCell(predictedRight) - Right
+					: Speed / ((up || down) && !topOnWall && !bottomOnWall ? MathF.Sqrt(2) : 1);
 
 			if (left && !right)
 				dx += rightOnWall
-					? _map.CeilingToCell(predictedLeft) - Left
-					: -_speed / ((up || down) && !topOnWall && !bottomOnWall ? MathF.Sqrt(2) : 1);
+					? LevelInfo.Level.CeilingToCell(predictedLeft) - Left
+					: -Speed / ((up || down) && !topOnWall && !bottomOnWall ? MathF.Sqrt(2) : 1);
 
 			_position += new Vector2(dx, dy);
 		}
@@ -114,17 +100,10 @@ namespace GameProject.GameObjects
 
 		public void Shoot(PointF eLocation)
 		{
-			if (_shootingCooldown != 0) return;
-			var dir = Math.ConvertToModelPos(new Vector2(eLocation.X, eLocation.Y), _position, _size,
-				new Vector2(_controlWidth, _controlHeight)) - (_position + _size / 2 - _map.Level.BulletSize / 2);
-			_customEntities.Add(new Bullet(this,
-				_position + _size / 2 - _map.Level.BulletSize / 2,
-				dir,
-				_map,
-				_enemies,
-				_customEntities,
-				this));
-			_shootingCooldown = _shootingCooldownMax;
+			var dir = Math.ConvertToModelPos(new Vector2(eLocation.X, eLocation.Y), _position, Size,
+				new Vector2(_controlWidth, _controlHeight)) - (_position + Size / 2 - LevelInfo.Level.BulletSize / 2);
+			LevelInfo.SummonedEntities.Add(new Bullet(this, _position + Size / 2 - LevelInfo.Level.BulletSize / 2,
+				dir));
 		}
 	}
 }

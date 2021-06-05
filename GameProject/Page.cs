@@ -1,4 +1,4 @@
-﻿using GameProject.Levels;
+﻿using System;
 using unvell.D2DLib.WinForm;
 
 namespace GameProject
@@ -12,7 +12,7 @@ namespace GameProject
 
 	internal static class PagesExtensions
 	{
-		public static D2DControl GetInstance(this Page page, Level level)
+		public static D2DControl GetInstance(this Page page, Type level)
 		{
 			return page switch
 			{

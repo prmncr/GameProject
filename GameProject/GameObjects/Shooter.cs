@@ -1,25 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
+using GameProject.Levels;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Shooter : Enemy
 	{
-		private readonly List<Entity> _customEntities;
-		private readonly int _shootingCooldownMax;
-
-		private readonly float _shootRange;
 		private int _shootingCooldown;
 
-		public Shooter(Vector2 startPos, Game level, float shootRange, int shootingCooldown, List<Enemy> enemies,
-			List<Entity> customEntities) : base(startPos, level, enemies)
+		public Shooter(Vector2 startPos) : base(startPos)
 		{
-			_shootRange = shootRange;
-			_shootingCooldown = shootingCooldown;
-			_shootingCooldownMax = shootingCooldown;
-			_customEntities = customEntities;
+			_shootingCooldown = LevelInfo.Level.ShootingCooldown;
 		}
+
+		private int _shootingCooldownMax => LevelInfo.Level.ShootingCooldown;
+
+		private float _shootRange => LevelInfo.Level.ShootingRange;
 
 		public override void Draw(D2DGraphics g, float width, float height)
 		{
@@ -49,7 +45,7 @@ namespace GameProject.GameObjects
 		{
 			var (pathExist, path) = CheckPath();
 			PlayerInVision = pathExist;
-			var distance = (Player.Position - Position).Length();
+			var distance = (LevelInfo.Player.Position - Position).Length();
 			if (pathExist && distance <= VisionDistance)
 			{
 				if (distance <= _shootRange) Shoot(path);
@@ -69,7 +65,7 @@ namespace GameProject.GameObjects
 		private void Shoot(Vector2 path)
 		{
 			if (_shootingCooldown != 0) return;
-			_customEntities.Add(new Bullet(this, Position + Size / 2, path, Game, null, _customEntities, Player));
+			LevelInfo.SummonedEntities.Add(new Bullet(this, Position + Size / 2, path));
 			_shootingCooldown = _shootingCooldownMax;
 		}
 	}
