@@ -7,6 +7,6 @@ namespace GameProject.GameObjects
 	{
 		public Vector2 Position { get; }
 
-		void Redraw(D2DGraphics g, float width, float height);
+		void Redraw(D2DGraphics g, D2DDevice device, float width, float height);
 	}
 }

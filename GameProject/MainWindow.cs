@@ -12,7 +12,11 @@ namespace GameProject
 		{
 			InitializeComponent();
 			_instance = this;
-			Controls.Add(new MainMenu {Dock = DockStyle.Fill});
+			TopMost = true;
+			WindowState = FormWindowState.Maximized;
+			FormBorderStyle = FormBorderStyle.None;
+			Name = "DrobashGame";
+			Controls.Add(new LevelSelector {Dock = DockStyle.Fill});
 		}
 
 		public static MainWindow GetInstance()

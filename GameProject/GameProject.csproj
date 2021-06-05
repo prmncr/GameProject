@@ -2,6 +2,8 @@
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <TargetFramework>net5.0-windows</TargetFramework>
+    <Company>ncrmncr</Company>
+    <NeutralLanguage>en-US</NeutralLanguage>
   </PropertyGroup>
   
   <PropertyGroup>
@@ -26,12 +28,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="MainMenu.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="Game.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Update="Properties\Resources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

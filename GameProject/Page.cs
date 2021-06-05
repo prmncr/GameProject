@@ -1,5 +1,5 @@
 ﻿using System;
-using unvell.D2DLib.WinForm;
+using System.Windows.Forms;
 
 namespace GameProject
 {
@@ -7,18 +7,19 @@ namespace GameProject
 	{
 		MainMenu,
 		Game,
-		Selector
+		Selector,
+		GameEnd
 	}
 
 	internal static class PagesExtensions
 	{
-		public static D2DControl GetInstance(this Page page, Type level)
+		public static Control GetInstance(this Page page, Type level)
 		{
 			return page switch
 			{
-				Page.MainMenu => new MainMenu(),
 				Page.Game => new Game(level),
 				Page.Selector => new LevelSelector(),
+				Page.GameEnd => new GameEnd(),
 				_ => null
 			};
 		}

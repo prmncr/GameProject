@@ -2,13 +2,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using unvell.D2DLib.WinForm;
+using GameProject.Properties;
 
 namespace GameProject
 {
-	public class MainMenu : D2DControl
+	public class GameEnd : Control
 	{
-		public MainMenu()
+		public GameEnd()
 		{
 			RenderMenu();
 		}
@@ -16,12 +16,12 @@ namespace GameProject
 		private async void RenderMenu()
 		{
 			await Task.Run(() => Thread.Sleep(5));
-			BackColor = Color.Gray;
+			BackgroundImage = Resources.YouDied;
+
 			Button btn = new()
 			{
-				Location = new Point((Width - 100) / 2, (Height - 50) / 2),
-				Size = new Size(100, 50),
-				Text = "Play"
+				Size = new Size(200, 50),
+				Text = "Menu"
 			};
 			btn.Click += (_, _) => MainWindow.GetInstance().ChangePage(Page.Selector);
 			Controls.Add(btn);

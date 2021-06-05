@@ -9,27 +9,27 @@ namespace GameProject.Levels
 		{
 			StringMap = new[]
 			{
-				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-				"wffffffffffffffffffffffffffwfffpfffw",
-				"wffffffffffffffffffffffffffwfffffffw",
-				"wfffffffffffffffffffffffffFffffffffw",
-				"wffffffffffffffffffffffffffffffffffw",
-				"wfffffffffffffffffffffffffFffffffffw",
-				"wffffffffffffffffffffffffffwfffffffw",
-				"wffffffffffffffffffffffffffwfffffffw",
-				"wffffffffffffffffffffffffffwfffffffw",
-				"wwwwwwwwwwwwwwwwwwwwwwwwwwwwfffffffw",
-				"wffffffffffffffffffffffffffffffffffw",
-				"wffffffffffffffffffffffffffffffffffw",
-				"wfffffwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-				"wfffffwffffffffffffffffffffffffffffw",
-				"wfffffwffffffffffffffffffffffffffffw",
-				"wffffffSfffffffffffffffffffffffffffw",
-				"wffffffffffffffffffffffffffffffffffw",
-				"wffffffSfffffffffffffffffffffffffffw",
-				"wfffffwffffffffffffffffffffffffffffw",
-				"wfffffwffffffffffffffffffffffffffffw",
-				"wwwEwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
+				"        wwwwwwwwwww",
+				"        wFwfffpfffw",
+				"        wfwfffffffw",
+				"        wfwfffffffw",
+				"        wfffffffffw",
+				"        wfffffffffw",
+				"        wfwfffffffw",
+				"        wfwfffffffw",
+				"        wFwfffffffw",
+				"wwwwwwwwwwwfffffffw",
+				"wfffffffffffffffffw",
+				"wfffffffffffffffffw",
+				"wfffffwwwwwwwwwwwww",
+				"wfffffwww          ",
+				"wfffffwww          ",
+				"wfffffwSw          ",
+				"wfffffffw          ",
+				"wfffffwSw          ",
+				"wfffffwww          ",
+				"wfffffwww          ",
+				"wwwEwwwww          "
 			};
 			BlockScale = 50;
 			PlayerSize = new Vector2(40, 40);

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Numerics;
 using GameProject.GameObjects;
 
@@ -82,17 +81,25 @@ namespace GameProject.Levels
 			CreateFloor(x, y);
 			LevelController.Enemies.Add(new Shooter(new Vector2(x * BlockScale, y * BlockScale)));
 		}
-		
+
 		private void CreateExit(int x, int y)
 		{
-			var exit= new ExitDoor(new Vector2(x, y));
+			var exit = new ExitDoor(new Vector2(x, y));
 			BuiltMap[y][x] = exit;
 			Exit = exit;
 		}
 
 		private IBuilding GetCell(float x, float y)
 		{
-			return BuiltMap[(int) MathF.Floor(y / BlockScale)][(int) MathF.Floor(x / BlockScale)];
+			try
+			{
+				return BuiltMap[(int) MathF.Floor(y / BlockScale)][(int) MathF.Floor(x / BlockScale)];
+			}
+			catch (Exception e)
+			{
+				Console.WriteLine(e);
+				return default;
+			}
 		}
 
 		public IBuilding GetCell(Vector2 posInScaling)
@@ -112,8 +119,9 @@ namespace GameProject.Levels
 
 		public bool IsWallOn((float, float) pos1, (float, float) pos2)
 		{
-			return GetCell(pos1.Item1, pos1.Item2) is Wall || GetCell(pos2.Item1, pos2.Item2) is Wall || 
-			       GetCell(pos1.Item1, pos1.Item2) is ExitDoor && !LevelController.Level.Exit.IsOpen || GetCell(pos2.Item1, pos2.Item2) is ExitDoor && !LevelController.Level.Exit.IsOpen;
+			return GetCell(pos1.Item1, pos1.Item2) is Wall || GetCell(pos2.Item1, pos2.Item2) is Wall ||
+			       GetCell(pos1.Item1, pos1.Item2) is ExitDoor && !LevelController.Level.Exit.IsOpen ||
+			       GetCell(pos2.Item1, pos2.Item2) is ExitDoor && !LevelController.Level.Exit.IsOpen;
 		}
 	}
 }

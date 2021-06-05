@@ -1,6 +1,3 @@
-using System.Collections.Generic;
-using System.Reflection;
-using GameProject.GameObjects;
 using GameProject.Levels;
 using GameProject.Tests.TestLevels;
 using NUnit.Framework;

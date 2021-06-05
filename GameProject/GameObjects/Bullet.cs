@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Linq;
 using System.Numerics;
 using GameProject.Levels;
@@ -23,9 +22,10 @@ namespace GameProject.GameObjects
 		private static Vector2 Size => LevelController.Level.BulletSize;
 		private static int Speed => LevelController.Level.BulletSpeed;
 
-		public override void Redraw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, D2DDevice device, float width, float height)
 		{
-			var renderPos = Math.ConvertToRenderPos(_position, LevelController.Player.Position, LevelController.Player.Size,
+			var renderPos = Math.ConvertToRenderPos(_position, LevelController.Player.Position,
+				LevelController.Player.Size,
 				new Vector2(width, height));
 			g.FillRectangle(renderPos.X, renderPos.Y, Size.X, Size.Y, D2DColor.Gold);
 		}
@@ -33,7 +33,8 @@ namespace GameProject.GameObjects
 		public override void UpdateCounters()
 		{
 			_position += _dPos;
-			if (LevelController.Level.GetCell(_position + _dPos - Size / 2) is Wall) LevelController.SummonedEntities.Remove(this);
+			if (LevelController.Level.GetCell(_position + _dPos - Size / 2) is Wall)
+				LevelController.SummonedEntities.Remove(this);
 			switch (_fromPlayer)
 			{
 				case false:
@@ -48,7 +49,8 @@ namespace GameProject.GameObjects
 		private void DamagePlayer()
 		{
 			if (!Math.AreIntersected(
-				new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y, LevelController.Player.Size.X,
+				new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y,
+					LevelController.Player.Size.X,
 					LevelController.Player.Size.Y),
 				new RectangleF(_position.X, _position.Y, Size.X, Size.Y))) return;
 			LevelController.Player.TakeDamage(20, 60);

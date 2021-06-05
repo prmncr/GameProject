@@ -2,19 +2,31 @@
 using System.Drawing;
 using System.Numerics;
 using GameProject.Levels;
+using GameProject.Properties;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Fighter : Enemy
 	{
+		private readonly Bitmap _bitmap = Resources.Fighter;
+		private D2DBitmap _cachedSprite;
+		private bool _isCached;
+
 		public Fighter(Vector2 startPos) : base(startPos)
 		{
 		}
 
-		public override void Redraw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, D2DDevice device, float width, float height)
 		{
-			Redraw(g, width, height, D2DColor.Green);
+			if (!_isCached)
+			{
+				_bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+				_cachedSprite = device.CreateBitmapFromGDIBitmap(_bitmap);
+				_isCached = true;
+			}
+
+			Redraw(g, width, height, _cachedSprite);
 		}
 
 		public override void UpdateCounters()
@@ -52,7 +64,8 @@ namespace GameProject.GameObjects
 		public override void DamagePlayer()
 		{
 			if (AreIntersected(
-				new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y, LevelController.Player.Size.X,
+				new RectangleF(LevelController.Player.Position.X, LevelController.Player.Position.Y,
+					LevelController.Player.Size.X,
 					LevelController.Player.Size.Y),
 				new RectangleF(Position.X, Position.Y, Size.X, Size.Y))) LevelController.Player.TakeDamage(10, 60);
 		}

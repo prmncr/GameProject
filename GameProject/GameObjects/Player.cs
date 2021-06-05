@@ -2,14 +2,18 @@
 using System.Drawing;
 using System.Numerics;
 using GameProject.Levels;
+using GameProject.Properties;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Player : Entity
 	{
+		private readonly Bitmap _bitmap = Resources.Player;
+		private D2DBitmap _cachedSprite;
 		private float _controlHeight;
 		private float _controlWidth;
+		private bool _isCached;
 		private Vector2 _position;
 
 		public Player(Vector2 startPos)
@@ -26,16 +30,19 @@ namespace GameProject.GameObjects
 		private float Left => _position.X;
 		private float Right => _position.X + Size.X;
 
-		public override void Redraw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, D2DDevice device, float width, float height)
 		{
+			if (!_isCached)
+			{
+				_bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+				_cachedSprite = device.CreateBitmapFromGDIBitmap(_bitmap);
+				_isCached = true;
+			}
+
 			_controlWidth = width;
 			_controlHeight = height;
-			g.FillRectangle(
-				MathF.Ceiling((width - Size.X) / 2),
-				MathF.Ceiling((height - Size.Y) / 2),
-				Size.X,
-				Size.Y,
-				IsResistance ? D2DColor.DarkGreen : D2DColor.LightGreen);
+			var a = new D2DRect((width - Size.X) / 2, (height - Size.Y) / 2, Size.X, Size.Y);
+			g.DrawBitmap(_cachedSprite, a);
 		}
 
 		public override void UpdateCounters()
@@ -57,7 +64,8 @@ namespace GameProject.GameObjects
 			var dy = 0f;
 
 			var predictedBottom = Bottom + Speed;
-			var bottomOnWall = LevelController.Level.IsWallOn((Left + 1, predictedBottom), (Right - 1, predictedBottom));
+			var bottomOnWall =
+				LevelController.Level.IsWallOn((Left + 1, predictedBottom), (Right - 1, predictedBottom));
 
 			var predictedTop = Top - Speed;
 			var topOnWall = LevelController.Level.IsWallOn((Right - 1, predictedTop), (Left + 1, predictedTop));
@@ -96,13 +104,18 @@ namespace GameProject.GameObjects
 			if (Resist != 0) return;
 			Health -= damage;
 			Resist = resist;
+
+			if (!(Health <= 0)) return;
+			MainWindow.GetInstance().ChangePage(Page.GameEnd);
 		}
 
 		public void Shoot(PointF eLocation)
 		{
 			var dir = Math.ConvertToModelPos(new Vector2(eLocation.X, eLocation.Y), _position, Size,
-				new Vector2(_controlWidth, _controlHeight)) - (_position + Size / 2 - LevelController.Level.BulletSize / 2);
-			LevelController.SummonedEntities.Add(new Bullet(this, _position + Size / 2 - LevelController.Level.BulletSize / 2,
+				          new Vector2(_controlWidth, _controlHeight)) -
+			          (_position + Size / 2 - LevelController.Level.BulletSize / 2);
+			LevelController.SummonedEntities.Add(new Bullet(this,
+				_position + Size / 2 - LevelController.Level.BulletSize / 2,
 				dir));
 		}
 	}

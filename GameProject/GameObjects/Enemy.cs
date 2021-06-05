@@ -102,11 +102,12 @@ namespace GameProject.GameObjects
 			if (Health <= 0) LevelController.Enemies.Remove(this);
 		}
 
-		protected void Redraw(D2DGraphics g, float width, float height, D2DColor color)
+		protected void Redraw(D2DGraphics g, float width, float height, D2DBitmap bitmap)
 		{
-			var renderPos = Math.ConvertToRenderPos(Position, LevelController.Player.Position, LevelController.Player.Size,
+			var renderPos = Math.ConvertToRenderPos(Position, LevelController.Player.Position,
+				LevelController.Player.Size,
 				new Vector2(width, height));
-			g.FillRectangle(renderPos.X, renderPos.Y, Size.X, Size.Y, color);
+			g.DrawBitmap(bitmap, new D2DRect(renderPos.X, renderPos.Y, Size.X, Size.Y));
 		}
 	}
 }

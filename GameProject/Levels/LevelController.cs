@@ -21,11 +21,11 @@ namespace GameProject.Levels
 			Level!.Initialize();
 		}
 
-		public static void Redraw(D2DGraphics g, int width, int height)
+		public static void Redraw(D2DGraphics g, D2DDevice device, int width, int height)
 		{
 			foreach (var buildings in Level.BuiltMap)
 			foreach (var building in buildings)
-				building.Redraw(g, width, height);
+				building?.Redraw(g, device, width, height);
 		}
 	}
 }

@@ -1,11 +1,16 @@
-﻿using System.Numerics;
+﻿using System.Drawing;
+using System.Numerics;
 using GameProject.Levels;
+using GameProject.Properties;
 using unvell.D2DLib;
 
 namespace GameProject.GameObjects
 {
 	public class Shooter : Enemy
 	{
+		private readonly Bitmap _bitmap = Resources.Shooter;
+		private D2DBitmap _cachedSprite;
+		private bool _isCached;
 		private int _shootingCooldown;
 
 		public Shooter(Vector2 startPos) : base(startPos)
@@ -17,9 +22,16 @@ namespace GameProject.GameObjects
 
 		private float _shootRange => LevelController.Level.ShootingRange;
 
-		public override void Redraw(D2DGraphics g, float width, float height)
+		public override void Redraw(D2DGraphics g, D2DDevice device, float width, float height)
 		{
-			base.Redraw(g, width, height, D2DColor.Blue);
+			if (!_isCached)
+			{
+				_bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+				_cachedSprite = device.CreateBitmapFromGDIBitmap(_bitmap);
+				_isCached = true;
+			}
+
+			base.Redraw(g, width, height, _cachedSprite);
 		}
 
 		public override void UpdateCounters()
