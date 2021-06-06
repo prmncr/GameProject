@@ -60,9 +60,9 @@ namespace GameProject.GameObjects
 		private void DamageEnemies()
 		{
 			if (!_fromPlayer) return;
-			var enemy = LevelController.Enemies.FirstOrDefault(enemy1 => 
-					new RectangleF(enemy1.Position.X, enemy1.Position.Y, enemy1.Size.X, enemy1.Size.Y)
-						.IntersectsWith(new RectangleF(_position.X, _position.Y, Size.X, Size.Y)));
+			var enemy = LevelController.Enemies.FirstOrDefault(enemy1 =>
+				new RectangleF(enemy1.Position.X, enemy1.Position.Y, enemy1.Size.X, enemy1.Size.Y)
+					.IntersectsWith(new RectangleF(_position.X, _position.Y, Size.X, Size.Y)));
 			if (enemy == null) return;
 			enemy.TakeDamage(30, 15);
 			LevelController.SummonedEntities.Remove(this);

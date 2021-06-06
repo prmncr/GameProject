@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 using GameProject.Levels;
 using unvell.D2DLib;
@@ -7,8 +8,12 @@ namespace GameProject.GameObjects
 {
 	public abstract class Enemy : Entity
 	{
+		protected readonly Dictionary<Direction, D2DBitmap> Bitmaps = new();
+
+		protected Direction CurrentDirection = Direction.Down;
+		protected bool IsCached;
+
 		protected Vector2? LastPath;
-		protected bool PlayerInVision;
 		public Vector2 Position;
 
 		protected Enemy(Vector2 startPos)
@@ -42,7 +47,6 @@ namespace GameProject.GameObjects
 		public virtual void MakeMove()
 		{
 			var (pathExist, path) = CheckPath();
-			PlayerInVision = pathExist;
 			if (pathExist && (LevelController.Player.Position - Position).Length() <= VisionDistance)
 			{
 				LastPath = path;
@@ -91,7 +95,31 @@ namespace GameProject.GameObjects
 					: -_speed / MathF.Sqrt(2), 0);
 			}
 
+			CalculateAngle(dPos.X, dPos.Y);
 			return dPos;
+		}
+
+		private void CalculateAngle(float dx, float dy)
+		{
+			var a = new Vector2(dx, dy);
+			a /= a.Length();
+			var angle = (int) (MathF.Atan2(a.X, a.Y) * 180 / MathF.PI / 90);
+			switch (angle)
+			{
+				case 0:
+					CurrentDirection = Direction.Right;
+					break;
+				case 1:
+					CurrentDirection = Direction.Up;
+					break;
+				case -1:
+					CurrentDirection = Direction.Down;
+					break;
+				case 2:
+				case -2:
+					CurrentDirection = Direction.Left;
+					break;
+			}
 		}
 
 		public void TakeDamage(int damage, int cd)
@@ -109,6 +137,14 @@ namespace GameProject.GameObjects
 				new Vector2(width, height));
 			g.DrawBitmap(bitmap, new D2DRect(renderPos.X, renderPos.Y, Size.X, Size.Y));
 			g.FillRectangle(renderPos.X - 5, renderPos.Y - 15, (Size.X + 10) * Health / 100, 10, D2DColor.Red);
+		}
+
+		protected enum Direction
+		{
+			Up,
+			Right,
+			Down,
+			Left
 		}
 	}
 }

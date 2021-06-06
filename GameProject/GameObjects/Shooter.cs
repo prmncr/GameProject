@@ -26,12 +26,22 @@ namespace GameProject.GameObjects
 		{
 			if (!_isCached)
 			{
-				_bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-				_cachedSprite = device.CreateBitmapFromGDIBitmap(_bitmap);
+				var b1 = Resources.Shooter.Clone() as Bitmap;
+				var b2 = Resources.Shooter.Clone() as Bitmap;
+				var b3 = Resources.Shooter.Clone() as Bitmap;
+				var b4 = Resources.Shooter.Clone() as Bitmap;
+				b2?.RotateFlip(RotateFlipType.Rotate90FlipNone);
+				b3?.RotateFlip(RotateFlipType.Rotate180FlipNone);
+				b4?.RotateFlip(RotateFlipType.Rotate270FlipNone);
+
+				Bitmaps.Add(Direction.Right, device.CreateBitmapFromGDIBitmap(b2));
+				Bitmaps.Add(Direction.Up, device.CreateBitmapFromGDIBitmap(b1));
+				Bitmaps.Add(Direction.Left, device.CreateBitmapFromGDIBitmap(b4));
+				Bitmaps.Add(Direction.Down, device.CreateBitmapFromGDIBitmap(b3));
 				_isCached = true;
 			}
 
-			base.Redraw(g, width, height, _cachedSprite);
+			base.Redraw(g, width, height, Bitmaps[CurrentDirection]);
 		}
 
 		public override void UpdateCounters()
@@ -56,7 +66,6 @@ namespace GameProject.GameObjects
 		public override void MakeMove()
 		{
 			var (pathExist, path) = CheckPath();
-			PlayerInVision = pathExist;
 			var distance = (LevelController.Player.Position - Position).Length();
 			if (pathExist && distance <= VisionDistance)
 			{

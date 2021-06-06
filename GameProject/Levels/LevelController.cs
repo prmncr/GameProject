@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using GameProject.GameObjects;
 using unvell.D2DLib;
 
@@ -13,7 +12,7 @@ namespace GameProject.Levels
 
 		public static List<Entity> SummonedEntities { get; private set; } = new();
 		public static List<Enemy> Enemies { get; private set; } = new();
-		
+
 		public static int MaxEnemies { get; private set; }
 		public static int EnemiesLeft => Enemies.Count;
 

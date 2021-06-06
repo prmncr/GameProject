@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Numerics;
 using GameProject.Levels;
@@ -9,10 +10,11 @@ namespace GameProject.GameObjects
 {
 	public class Player : Entity
 	{
-		private readonly Bitmap _bitmap = Resources.Player;
-		private D2DBitmap _cachedSprite;
+		private readonly Dictionary<Direction, D2DBitmap> _bitmaps = new();
+
 		private float _controlHeight;
 		private float _controlWidth;
+		private Direction _direction;
 		private bool _isCached;
 		private Vector2 _position;
 
@@ -34,15 +36,25 @@ namespace GameProject.GameObjects
 		{
 			if (!_isCached)
 			{
-				_bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-				_cachedSprite = device.CreateBitmapFromGDIBitmap(_bitmap);
+				var b1 = Resources.Player.Clone() as Bitmap;
+				var b2 = Resources.Player.Clone() as Bitmap;
+				var b3 = Resources.Player.Clone() as Bitmap;
+				var b4 = Resources.Player.Clone() as Bitmap;
+				b2?.RotateFlip(RotateFlipType.Rotate90FlipNone);
+				b3?.RotateFlip(RotateFlipType.Rotate180FlipNone);
+				b4?.RotateFlip(RotateFlipType.Rotate270FlipNone);
+
+				_bitmaps.Add(Direction.Right, device.CreateBitmapFromGDIBitmap(b2));
+				_bitmaps.Add(Direction.Up, device.CreateBitmapFromGDIBitmap(b1));
+				_bitmaps.Add(Direction.Left, device.CreateBitmapFromGDIBitmap(b4));
+				_bitmaps.Add(Direction.Down, device.CreateBitmapFromGDIBitmap(b3));
 				_isCached = true;
 			}
 
 			_controlWidth = width;
 			_controlHeight = height;
 			var a = new D2DRect((width - Size.X) / 2, (height - Size.Y) / 2, Size.X, Size.Y);
-			g.DrawBitmap(_cachedSprite, a);
+			g.DrawBitmap(_bitmaps[_direction], a);
 		}
 
 		public override void UpdateCounters()
@@ -97,6 +109,30 @@ namespace GameProject.GameObjects
 					: -Speed / ((up || down) && !topOnWall && !bottomOnWall ? MathF.Sqrt(2) : 1);
 
 			_position += new Vector2(dx, dy);
+			CalculateAngle(dx, dy);
+		}
+
+		private void CalculateAngle(float dx, float dy)
+		{
+			var a = new Vector2(dx, dy);
+			a /= a.Length();
+			var angle = (int) (MathF.Atan2(a.X, a.Y) * 180 / MathF.PI / 90);
+			switch (angle)
+			{
+				case 0:
+					_direction = Direction.Right;
+					break;
+				case 1:
+					_direction = Direction.Up;
+					break;
+				case -1:
+					_direction = Direction.Down;
+					break;
+				case 2:
+				case -2:
+					_direction = Direction.Left;
+					break;
+			}
 		}
 
 		public void TakeDamage(float damage, int resist)
@@ -117,6 +153,14 @@ namespace GameProject.GameObjects
 			LevelController.SummonedEntities.Add(new Bullet(this,
 				_position + Size / 2 - LevelController.Level.BulletSize / 2,
 				dir));
+		}
+
+		private enum Direction
+		{
+			Up,
+			Right,
+			Down,
+			Left
 		}
 	}
 }

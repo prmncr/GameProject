@@ -9,24 +9,30 @@ namespace GameProject.GameObjects
 {
 	public class Fighter : Enemy
 	{
-		private readonly Bitmap _bitmap = Resources.Fighter;
-		private D2DBitmap _cachedSprite;
-		private bool _isCached;
-
 		public Fighter(Vector2 startPos) : base(startPos)
 		{
 		}
 
 		public override void Redraw(D2DGraphics g, D2DDevice device, float width, float height)
 		{
-			if (!_isCached)
+			if (!IsCached)
 			{
-				_bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
-				_cachedSprite = device.CreateBitmapFromGDIBitmap(_bitmap);
-				_isCached = true;
+				var b1 = Resources.Fighter.Clone() as Bitmap;
+				var b2 = Resources.Fighter.Clone() as Bitmap;
+				var b3 = Resources.Fighter.Clone() as Bitmap;
+				var b4 = Resources.Fighter.Clone() as Bitmap;
+				b2?.RotateFlip(RotateFlipType.Rotate90FlipNone);
+				b3?.RotateFlip(RotateFlipType.Rotate180FlipNone);
+				b4?.RotateFlip(RotateFlipType.Rotate270FlipNone);
+
+				Bitmaps.Add(Direction.Right, device.CreateBitmapFromGDIBitmap(b2));
+				Bitmaps.Add(Direction.Up, device.CreateBitmapFromGDIBitmap(b1));
+				Bitmaps.Add(Direction.Left, device.CreateBitmapFromGDIBitmap(b4));
+				Bitmaps.Add(Direction.Down, device.CreateBitmapFromGDIBitmap(b3));
+				IsCached = true;
 			}
 
-			Redraw(g, width, height, _cachedSprite);
+			Redraw(g, width, height, Bitmaps[CurrentDirection]);
 		}
 
 		public override void UpdateCounters()
@@ -45,7 +51,6 @@ namespace GameProject.GameObjects
 		public override void MakeMove()
 		{
 			var (pathExist, path) = CheckPath();
-			PlayerInVision = pathExist;
 			if (pathExist && (LevelController.Player.Position - Position).Length() <= VisionDistance)
 			{
 				LastPath = path;
