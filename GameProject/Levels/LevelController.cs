@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using GameProject.GameObjects;
 using unvell.D2DLib;
 
@@ -12,6 +13,9 @@ namespace GameProject.Levels
 
 		public static List<Entity> SummonedEntities { get; private set; } = new();
 		public static List<Enemy> Enemies { get; private set; } = new();
+		
+		public static int MaxEnemies { get; private set; }
+		public static int EnemiesLeft => Enemies.Count;
 
 		public static void Restart(Type level)
 		{
@@ -19,6 +23,7 @@ namespace GameProject.Levels
 			Enemies = new List<Enemy>();
 			Level = Activator.CreateInstance(level) as Level;
 			Level!.Initialize();
+			MaxEnemies = Enemies.Count;
 		}
 
 		public static void Redraw(D2DGraphics g, D2DDevice device, int width, int height)

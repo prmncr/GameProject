@@ -36,7 +36,7 @@ namespace GameProject.Levels
 			PlayerSpeed = 5;
 			EnemySize = new Vector2(40, 40);
 			EnemySpeed = 4;
-			EnemyVisionDistance = 400;
+			EnemyVisionDistance = 500;
 			ShootingRange = 200;
 			ShootingCooldown = 120;
 			BulletSize = new Vector2(10, 10);

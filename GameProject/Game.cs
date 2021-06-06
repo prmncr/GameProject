@@ -58,7 +58,10 @@ namespace GameProject
 				entity.Redraw(g, Device, Width, Height);
 
 			LevelController.Player.Redraw(g, Device, Width, Height);
-			g.FillRectangle(Width - 300, 0, 3 * LevelController.Player.Health, 30, D2DColor.Red);
+			g.FillRectangle(0, 0, 3 * LevelController.Player.Health, 30, D2DColor.Red);
+			g.DrawRectangle(0, 0, 300, 30, D2DColor.Red);
+			g.DrawTextCenter("Health", D2DColor.White, "Consolas", 16, new D2DRect(0, 0, 300, 30));
+			g.DrawTextCenter($"Enemies left: {LevelController.EnemiesLeft}/{LevelController.MaxEnemies}", D2DColor.White, "Consolas", 16, new D2DRect(0, 30, 300, 30));
 
 			Invalidate();
 

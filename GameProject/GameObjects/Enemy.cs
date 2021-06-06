@@ -108,6 +108,7 @@ namespace GameProject.GameObjects
 				LevelController.Player.Size,
 				new Vector2(width, height));
 			g.DrawBitmap(bitmap, new D2DRect(renderPos.X, renderPos.Y, Size.X, Size.Y));
+			g.FillRectangle(renderPos.X - 5, renderPos.Y - 15, (Size.X + 10) * Health / 100, 10, D2DColor.Red);
 		}
 	}
 }

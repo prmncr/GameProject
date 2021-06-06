@@ -12,9 +12,9 @@ namespace GameProject
 		{
 			InitializeComponent();
 			_instance = this;
-			TopMost = true;
-			WindowState = FormWindowState.Maximized;
-			FormBorderStyle = FormBorderStyle.None;
+			//TopMost = true;
+			//WindowState = FormWindowState.Maximized;
+			//FormBorderStyle = FormBorderStyle.None;
 			Name = "DrobashGame";
 			Controls.Add(new LevelSelector {Dock = DockStyle.Fill});
 		}
